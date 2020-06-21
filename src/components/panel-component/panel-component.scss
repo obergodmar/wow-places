@@ -1,0 +1,71 @@
+.panel {
+  display: flex;
+  position: absolute;
+  height: 0;
+  width: 0;
+
+  button {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--foreground);
+    background-color: unset;
+    transition: width 0.2s;
+
+    &:hover {
+      background-color: var(--foreground);
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &--bottom {
+    bottom: 0;
+    border: none;
+    width: 100%;
+    transition: height 0.5s;
+
+    button {
+      left: 50%;
+      transform: translateX(-50%);
+      top: -10px;
+      width: 50px;
+    }
+
+    &--shown {
+      border-top: 2px solid var(--foreground);
+      height: 360px;
+
+      button {
+        height: 25px;
+        top: -25px;
+      }
+    }
+  }
+
+  &--left {
+    left: 0;
+    border: none;
+    height: 100%;
+    transition: width 0.5s;
+
+    button {
+      top: 50%;
+      transform: translateY(-50%);
+      right: -10px;
+      height: 50px;
+    }
+
+    &--shown {
+      border-right: 2px solid var(--foreground);
+      width: 360px;
+
+      button {
+        width: 25px;
+        right: -25px;
+      }
+    }
+  }
+}
