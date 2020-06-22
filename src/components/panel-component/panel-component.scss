@@ -1,10 +1,20 @@
+@import "../../app/style";
+
 .panel {
+  z-index: 2;
   display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border: none;
   position: absolute;
-  height: 0;
-  width: 0;
+  height: 220px;
+  width: 360px;
+  background-image: $panelBackground;
+  background-repeat: repeat;
 
   button {
+    z-index: 3;
+    cursor: pointer;
     position: absolute;
     width: 10px;
     height: 10px;
@@ -22,10 +32,19 @@
   }
 
   &--bottom {
-    bottom: 0;
-    border: none;
+    bottom: -220px;
     width: 100%;
-    transition: height 0.5s;
+    transition: bottom 0.5s;
+
+    .panel-border {
+      position: absolute;
+      z-index: 3;
+      top: -10px;
+      min-width: 100%;
+      background-image: $borderRight;
+      background-repeat: repeat;
+      height: 16px;
+    }
 
     button {
       left: 50%;
@@ -35,8 +54,7 @@
     }
 
     &--shown {
-      border-top: 2px solid var(--foreground);
-      height: 360px;
+      bottom: 0;
 
       button {
         height: 25px;
@@ -46,10 +64,20 @@
   }
 
   &--left {
-    left: 0;
-    border: none;
+    left: -360px;
+    flex-direction: column;
     height: 100%;
-    transition: width 0.5s;
+    transition: left 0.5s;
+
+    .panel-border {
+      position: absolute;
+      z-index: 3;
+      right: -8px;
+      min-height: 100%;
+      background-image: $borderTop;
+      background-repeat: repeat;
+      width: 16px;
+    }
 
     button {
       top: 50%;
@@ -59,8 +87,7 @@
     }
 
     &--shown {
-      border-right: 2px solid var(--foreground);
-      width: 360px;
+      left: 0;
 
       button {
         width: 25px;
