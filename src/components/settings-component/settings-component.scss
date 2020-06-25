@@ -1,0 +1,71 @@
+@import "../../app/style";
+
+$settingsWidth: 182px;
+$settingsHeight: 315px;
+$settingsBorderWidth: 12px;
+$settingsBorderOutset: $settingsBorderWidth - 4px;
+
+$settingsHeaderWidth: 132px;
+$settingsHeaderHeight: 25px;
+
+.settings {
+  z-index: 5;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: $settingsBorderWidth double $fontColor;
+  border-image: $border 15 15 15 15 fill;
+  border-image-outset: $settingsBorderOutset;
+  border-image-repeat: stretch stretch;
+  font-family: $font;
+  font-size: $fontSize;
+  text-shadow: $fontShadow;
+  letter-spacing: $fontSpacing;
+  width: $settingsWidth;
+  height: $settingsHeight;
+  background-color: $settingsBackground;
+
+  &-header {
+    z-index: 6;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: $fontColor;
+    top: -$settingsHeaderHeight;
+    width: $settingsHeaderWidth;
+    height: $settingsHeaderHeight;
+    border: $settingsBorderWidth double $fontColor;
+    border-image: $border 15 15 15 15 fill;
+    border-image-outset: $settingsBorderOutset;
+    border-image-repeat: stretch stretch;
+    background-image: $backgroundTexture;
+    background-repeat: repeat;
+  }
+
+  &-content {
+    color: $fontColor;
+    margin-top: 10px;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-gap: 15px;
+  }
+
+  &-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .settings-button {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

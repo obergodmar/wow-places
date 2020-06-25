@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { Plug } from '../../assets'
 import './preview-component.scss'
@@ -15,27 +15,39 @@ export const PreviewComponent = ({src, value, handleChange, isLoading}: Props) =
     const [isLoaded, setLoaded] = useState(false)
     const image = useMemo(() => {
         setLoaded(false)
-        const img = new Image(320, 180)
+        const img = new Image()
         img.src = src
-        img.onload = () => {
-            setLoaded(true)
-        }
         return img
     }, [src])
 
-    const handleClick = () => {
+    useEffect(() => {
+        image.onload = () => {
+            setLoaded(true)
+        }
+        return () => {
+            image.onload = null
+        }
+    }, [image])
+
+    const handleClick = (e: React.MouseEvent) => {
+        e.preventDefault()
         handleChange(value)
     }
 
     return (
             <div
+                    onContextMenu={handleClick}
                     onClick={handleClick}
                     style={{
-                        backgroundImage: `url(${isLoaded ? image.src : Plug})`,
-                        backgroundSize: `${isLoaded ? '320px 180px' : '90px 90px'}`,
-                        opacity: `${isLoading ? '0.4' : '1'}`
+                        backgroundImage: `url(${isLoaded ? image.src : Plug})`
                     }}
-                    className='preview'
+                    className={
+                        `preview ${!isLoaded
+                                ? 'preview--not-loaded' :
+                                ''} ${isLoading
+                                ? 'preview--loading'
+                                : ''}`
+                    }
             />
     )
 }

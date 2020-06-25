@@ -1,18 +1,33 @@
 @import "../../app/style";
 
+$previewBorderWidth: 10px;
+$plugSize: 90px;
+
 .preview {
   z-index: 4;
-  cursor: pointer;
-  min-width: 320px;
-  min-height: 180px;
+  cursor: $cursorInteract, auto;
+  min-width: $previewWidth;
+  min-height: $previewHeight;
   margin: 5px;
-  border: 10px double var(--foreground);
+  border: $previewBorderWidth double $fontColor;
   border-image: $border 12 12 11 12;
-  border-image-width: 10px;
-  border-image-outset: 5px;
+  border-image-outset: $previewBorderWidth / 2;
   border-image-repeat: stretch stretch;
   background-position: center;
-  background-size: contain;
+  background-size: $previewWidth $previewHeight;
   background-repeat: no-repeat;
-  transition: opacity 800ms ease-in-out;
+  opacity: 1;
+  transition: opacity $transitionDuration $transitionType;
+
+  &--not-loaded {
+    background-size: $plugSize;
+  }
+
+  &--loading {
+    opacity: 0.4;
+  }
+
+  &:hover {
+    box-shadow: $hoverColor;
+  }
 }

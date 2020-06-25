@@ -1,98 +1,78 @@
 @import "../../app/style";
 
+$panelWidth: $previewWidth + 40px;
+$panelHeight: $previewHeight + 40px;
+
+$panelBorderSize: 8px;
+
 .panel {
   z-index: 2;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  padding: 20px;
   border: none;
   position: absolute;
-  height: 220px;
-  width: 360px;
+  height: $panelHeight;
+  width: $panelWidth;
   background-image: $panelBackground;
   background-repeat: repeat;
 
+  &-content {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
   button {
     z-index: 3;
-    cursor: pointer;
     position: absolute;
-    width: 10px;
-    height: 10px;
-    border: 2px solid var(--foreground);
-    background-color: unset;
-    transition: width 0.2s;
-
-    &:hover {
-      background-color: var(--foreground);
-    }
-
-    &:focus {
-      outline: none;
-    }
   }
 
   &--bottom {
-    bottom: -220px;
+    bottom: -$panelHeight + $panelBorderSize;
     width: 100%;
-    transition: bottom 0.5s;
+    transition: bottom $transitionDuration $transitionType;
+    border-top: $panelBorderSize double $fontColor;
+    border-image: $borderTop 16 32 16 32;
+    border-image-outset: $panelBorderSize - 2px 0 0 0;
+    border-image-width: $panelBorderSize*2 0 0 100%;
+    border-image-repeat: round round;
 
-    .panel-border {
-      position: absolute;
-      z-index: 3;
-      top: -10px;
-      min-width: 100%;
-      background-image: $borderRight;
-      background-repeat: repeat;
-      height: 16px;
+    .panel-content {
+      height: 100%;
     }
 
     button {
       left: 50%;
       transform: translateX(-50%);
-      top: -10px;
-      width: 50px;
+      top: -$buttonHeight - 5px;
     }
 
     &--shown {
       bottom: 0;
-
-      button {
-        height: 25px;
-        top: -25px;
-      }
     }
   }
 
   &--left {
-    left: -360px;
-    flex-direction: column;
+    left: -$panelWidth + $panelBorderSize;
     height: 100%;
-    transition: left 0.5s;
+    border-right: $panelBorderSize double $fontColor;
+    border-image: $borderRight 32 16 0 0;
+    border-image-outset: 0 $panelBorderSize - 2px 0 0;
+    border-image-width: 100% $panelBorderSize*2 0 0;
+    transition: left $transitionDuration $transitionType;
 
-    .panel-border {
-      position: absolute;
-      z-index: 3;
-      right: -8px;
-      min-height: 100%;
-      background-image: $borderTop;
-      background-repeat: repeat;
-      width: 16px;
+    .panel-content {
+      flex-direction: column;
+      width: 100%;
     }
 
     button {
       top: 50%;
-      transform: translateY(-50%);
-      right: -10px;
-      height: 50px;
+      transform: translateY(-50%) rotate(90deg);
+      right: -80px;
     }
 
     &--shown {
       left: 0;
-
-      button {
-        width: 25px;
-        right: -25px;
-      }
     }
   }
 }

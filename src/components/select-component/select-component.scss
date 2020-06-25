@@ -1,0 +1,123 @@
+@import "../../app/style";
+
+$selectWidth: 90px;
+$selectHeight: 30px;
+
+$selectBackgroundWidth: $selectWidth - 5px;
+$selectBackgroundHeight: $selectHeight + 15px;
+
+$DropDownBorder: 10px;
+$dropDownOutset: $DropDownBorder / 2;
+
+.select {
+  color: $fontColorWhite;
+  display: flex;
+  position: relative;
+  padding-left: 6px;
+  justify-content: space-between;
+  border-radius: 8px;
+  align-items: center;
+  width: $selectWidth;
+  height: $selectHeight;
+  background-image: $selectBorder;
+  background-repeat: no-repeat;
+  background-size: $selectBackgroundWidth $selectBackgroundHeight;
+  background-position: center top;
+
+  &::before {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 2px;
+    width: 75px;
+    height: 18px;
+    background-image: $panelBackground;
+    background-repeat: repeat;
+  }
+
+  &:active {
+    .select-arrow {
+      background-image: $selectArrowClick;
+    }
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: inset $hoverColor;
+  }
+
+  &-arrow {
+    width: 32px;
+    height: 32px;
+    background-image: $selectArrow;
+  }
+
+  &-drop-down {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: $selectWidth + 10px;
+    top: $selectHeight + 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: $dropDownOutset double $fontColor;
+    border-image: $border 13 13 13 13;
+    border-image-width: $DropDownBorder;
+    border-image-outset: $dropDownOutset;
+    border-image-repeat: stretch stretch;
+    background-color: $settingsBackground;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &-item {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 17px;
+
+    &:hover {
+      background: linear-gradient(90deg,
+              rgba(173, 154, 32, 0.1) 0%,
+              rgba(173, 154, 32, 0.5) 25%,
+              rgba(173, 154, 32, 0.5) 75%,
+              rgba(173, 154, 32, 0.1) 100%);
+    }
+
+    &:focus {
+      outline: none;
+      background: linear-gradient(90deg,
+              rgba(173, 154, 32, 0.1) 0%,
+              rgba(173, 154, 32, 0.5) 25%,
+              rgba(173, 154, 32, 0.5) 75%,
+              rgba(173, 154, 32, 0.1) 100%);
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: $radio;
+      left: 0;
+    }
+
+    &--selected {
+      &::before {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background: $radio 48px, $radio;
+        left: 0;
+      }
+    }
+  }
+}

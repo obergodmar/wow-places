@@ -1,0 +1,17 @@
+@import "../../app/style";
+
+.checkbox {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-image: $checkbox;
+
+  &:focus {
+    outline: none;
+    box-shadow: inset $hoverColor;
+  }
+
+  &--checked {
+    background-image: $checkboxCheck, $checkbox;
+  }
+}

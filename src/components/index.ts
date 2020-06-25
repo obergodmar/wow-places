@@ -1,3 +1,6 @@
 export { ViewComponent } from './view-component/view-component'
+export { SelectComponent } from './select-component/select-component'
 export { PanelComponent } from './panel-component/panel-component'
 export { PreviewComponent } from './preview-component/preview-component'
+export { SettingsComponent } from './settings-component/settings-component'
+export { CheckBoxComponent } from './checkbox-component/checkbox-component'
