@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import UIfx from 'uifx'
+import { KeyboardEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import Sound from '../modules/sound'
 
 import { PanelComponent, PreviewComponent, SettingsComponent, ViewComponent } from '../components'
 import places from '../assets'
-import { delay, UI_SOUND_VOLUME } from '../utils'
+import { delay, UI_MUSIC_VOLUME, UI_SOUND_VOLUME } from '../utils'
 import { useSettings } from '../hooks'
 
 import PanelOpenAudio from '../assets/audio/sound/panel-open.ogg'
@@ -16,23 +16,37 @@ import SettingsCloseAudio from '../assets/audio/sound/menu-close.ogg'
 import CheckBoxOnAudio from '../assets/audio/sound/check-box-on.ogg'
 import CheckBoxOffAudio from '../assets/audio/sound/check-box-off.ogg'
 
+import StormwindParkMusic1 from '../assets/audio/music/stormwind-park-music-1.mp3'
+import StormwindParkMusic2 from '../assets/audio/music/stormwind-park-music-2.mp3'
+
 import './style.scss'
 
 export default function App() {
     const {settings} = useSettings()
     const [isSettingsShown, setSettingsShown] = useState(false)
     const [isLoading, setLoading] = useState(false)
+    const [isPlaying, setPlaying] = useState(false)
     const [isLeftPanelShown, setLeftPanelShown] = useState(false)
     const [isBottomPanelShown, setBottomPanelShown] = useState(false)
     const [activePlace, setActivePlace] = useState(0)
     const [activeView, setActiveView] = useState(0)
 
-    const panelOpenSound = useMemo(() => new UIfx(PanelOpenAudio), [])
-    const panelCloseSound = useMemo(() => new UIfx(PanelCloseAudio), [])
-    const settingsOpenSound = useMemo(() => new UIfx(SettingsOpenAudio), [])
-    const settingsCloseSound = useMemo(() => new UIfx(SettingsCloseAudio), [])
-    const checkboxOnSound = useMemo(() => new UIfx(CheckBoxOnAudio), [])
-    const checkboxOffSound = useMemo(() => new UIfx(CheckBoxOffAudio), [])
+    const soundLoad = (soundFile: string, soundVolume: number) => {
+        const sound = new Sound(soundFile)
+        sound.setVolume(soundVolume)
+        return sound
+    }
+
+    const panelOpenSound = useMemo(() => soundLoad(PanelOpenAudio, UI_SOUND_VOLUME), [])
+    const panelCloseSound = useMemo(() => soundLoad(PanelCloseAudio, UI_SOUND_VOLUME), [])
+    const settingsOpenSound = useMemo(() => soundLoad(SettingsOpenAudio, UI_SOUND_VOLUME), [])
+    const settingsCloseSound = useMemo(() => soundLoad(SettingsCloseAudio, UI_SOUND_VOLUME), [])
+    const checkboxOnSound = useMemo(() => soundLoad(CheckBoxOnAudio, UI_SOUND_VOLUME), [])
+    const checkboxOffSound = useMemo(() => soundLoad(CheckBoxOffAudio, UI_SOUND_VOLUME), [])
+
+    const StormwindMusic1 = useMemo(() => soundLoad(StormwindParkMusic1, UI_MUSIC_VOLUME), [])
+    const StormwindMusic2 = useMemo(() => soundLoad(StormwindParkMusic2, UI_MUSIC_VOLUME), [])
+    const [currentPlaying, setCurrentPlaying] = useState(StormwindMusic1)
 
     const app = useRef<HTMLDivElement>(null)
 
@@ -62,29 +76,56 @@ export default function App() {
     }
 
     useEffect(() => {
-        appFocus()
-    }, [])
-
-    const appFocus = () => {
         if (app && app.current) {
             app.current.focus()
         }
-    }
+    }, [app])
+
+    useLayoutEffect(() => {
+        document.title = settings.language['place.stormwind-park']
+    }, [settings.language])
+
+    useEffect(() => {
+        StormwindMusic1.audio.onplay = () => {
+            setCurrentPlaying(StormwindMusic1)
+            setPlaying(true)
+        }
+        StormwindMusic2.audio.onplay = () => {
+            setCurrentPlaying(StormwindMusic2)
+            setPlaying(true)
+        }
+        StormwindMusic1.audio.onended = () => {
+            StormwindMusic2.playMusic()
+        }
+        StormwindMusic2.audio.onended = () => {
+            StormwindMusic1.playMusic()
+        }
+        return () => {
+            StormwindMusic1.audio.onplay = null
+            StormwindMusic2.audio.onplay = null
+            StormwindMusic1.audio.onended = null
+            StormwindMusic2.audio.onended = null
+        }
+    }, [StormwindMusic1, StormwindMusic2])
+
+    const appClick = () => currentPlaying.playMusic()
 
     const openCloseSettings = () => {
         setSettingsShown(!isSettingsShown)
-        appFocus()
+        if (app && app.current) {
+            app.current.focus()
+        }
         if (!settings.uiSound) {
             return
         }
         if (isSettingsShown) {
-            settingsCloseSound.play(UI_SOUND_VOLUME)
+            settingsCloseSound.playSound()
         } else {
-            settingsOpenSound.play(UI_SOUND_VOLUME)
+            settingsOpenSound.playSound()
         }
     }
 
-    const handleOpenSettings = (e: React.KeyboardEvent) => {
+    const handleOpenSettings = (e: KeyboardEvent) => {
         switch (e.keyCode) {
             case 27:
                 if (isLeftPanelShown || isBottomPanelShown) {
@@ -94,20 +135,28 @@ export default function App() {
                 }
                 openCloseSettings()
                 break
+            case 32:
+                if (isPlaying) {
+                    currentPlaying.pause()
+                    setPlaying(false)
+                } else {
+                    currentPlaying.playMusic()
+                }
         }
     }
 
     return (
             <div
                     ref={app}
+                    onClick={appClick}
                     onKeyDown={handleOpenSettings}
                     tabIndex={0}
                     className='main'
             >
                 <ViewComponent src={places[activePlace].view[activeView]}/>
                 <PanelComponent
-                        openSound={panelOpenSound}
-                        closeSound={panelCloseSound}
+                        openSoundPlay={panelOpenSound.playSound}
+                        closeSoundPlay={panelCloseSound.playSound}
                         itemsCount={places.length || 0}
                         orientation='left'
                         isShown={isLeftPanelShown}
@@ -124,8 +173,8 @@ export default function App() {
                     ))}
                 </PanelComponent>
                 <PanelComponent
-                        openSound={panelOpenSound}
-                        closeSound={panelCloseSound}
+                        openSoundPlay={panelOpenSound.playSound}
+                        closeSoundPlay={panelCloseSound.playSound}
                         itemsCount={places[activePlace].preview.length || 0}
                         orientation='bottom'
                         isShown={isBottomPanelShown}
@@ -144,8 +193,8 @@ export default function App() {
                 {isSettingsShown && (
                         <SettingsComponent
                                 closeSettings={openCloseSettings}
-                                checkboxOnSound={checkboxOnSound}
-                                checkboxOffSound={checkboxOffSound}
+                                checkboxOnSoundPlay={checkboxOnSound.playSound}
+                                checkboxOffSoundPlay={checkboxOffSound.playSound}
                         />
                 )
                 }

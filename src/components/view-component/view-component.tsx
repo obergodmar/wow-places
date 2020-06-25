@@ -12,19 +12,22 @@ interface Props {
 
 export const ViewComponent = ({src}: Props) => {
     const [imageSrc, setImageSrc] = useState(Background)
+    const [isLoaded, setLoaded] = useState(false)
 
     useEffect(() => {
+        setLoaded(false)
         const timer = setTimeout(() => {
             const image = new Image()
             image.src = src
             image.onload = () => {
                 setImageSrc(src)
+                setLoaded(true)
             }
         }, ANIMATION_DURATION)
         return () => {
             clearTimeout(timer)
         }
-    }, [src])
+    }, [src, imageSrc])
 
     return (
             <div
@@ -32,7 +35,13 @@ export const ViewComponent = ({src}: Props) => {
                     style={{
                         backgroundImage: `url(${imageSrc})`
                     }}
-            />
+            >
+                <div className={`view-background ${isLoaded ? 'view-background--loaded' : ''}`}/>
+                <div className='view-author'>
+                    <a href="https://github.com/obergodmar">obergodmar</a>
+                    <span>1.0.0</span>
+                </div>
+            </div>
     )
 }
 

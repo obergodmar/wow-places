@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { FocusEvent, MouseEvent, useEffect, useMemo, useRef, useState, WheelEvent } from 'react'
-import UIfx from 'uifx'
 
-import { PREVIEW_HEIGHT, PREVIEW_WIDTH, UI_SOUND_VOLUME } from '../../utils'
+import { PREVIEW_HEIGHT, PREVIEW_WIDTH } from '../../utils'
 import { useSettings } from '../../hooks'
 
 import './panel-component.scss'
@@ -12,8 +11,8 @@ interface Props {
     isShown: boolean
     itemsCount: number
     setShown: () => void
-    openSound: UIfx
-    closeSound: UIfx
+    openSoundPlay: (volume?: number) => void
+    closeSoundPlay: (volume?: number) => void
     children: React.ReactNode
 }
 
@@ -21,8 +20,8 @@ export const PanelComponent = ({
     isShown,
     setShown,
     children,
-    openSound,
-    closeSound,
+    openSoundPlay,
+    closeSoundPlay,
     itemsCount,
     orientation
 }: Props) => {
@@ -49,9 +48,9 @@ export const PanelComponent = ({
             return
         }
         if (isShown) {
-            openSound.play(UI_SOUND_VOLUME)
+            openSoundPlay()
         } else {
-            closeSound.play(UI_SOUND_VOLUME)
+            closeSoundPlay()
         }
     }
 

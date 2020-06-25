@@ -1,25 +1,22 @@
 import * as React from 'react'
-import UIfx from 'uifx'
-
-import { useSettings } from '../../hooks'
 
 import ru from '../../locales/ru.json'
 import en from '../../locales/en.json'
+import { useSettings } from '../../hooks'
+import { Settings } from '../../settings-context'
+import { CheckBoxComponent, SelectComponent } from '..'
 
 import './settings-component.scss'
-import { Settings } from '../../settings-context'
-import { UI_SOUND_VOLUME } from '../../utils'
-import { CheckBoxComponent, SelectComponent } from '..'
 
 type languageValue = keyof typeof ru;
 
 interface Props {
     closeSettings: () => void
-    checkboxOnSound: UIfx
-    checkboxOffSound: UIfx
+    checkboxOnSoundPlay: (volume?: number) => void
+    checkboxOffSoundPlay: (volume?: number) => void
 }
 
-export const SettingsComponent = ({closeSettings, checkboxOnSound, checkboxOffSound}: Props) => {
+export const SettingsComponent = ({closeSettings, checkboxOnSoundPlay, checkboxOffSoundPlay}: Props) => {
     const {settings, saveSettings} = useSettings()
 
     const handleCheckboxClick = (option: keyof Settings) => {
@@ -28,9 +25,9 @@ export const SettingsComponent = ({closeSettings, checkboxOnSound, checkboxOffSo
             return
         }
         if (settings[option]) {
-            checkboxOffSound.play(UI_SOUND_VOLUME)
+            checkboxOffSoundPlay()
         } else {
-            checkboxOnSound.play(UI_SOUND_VOLUME)
+            checkboxOnSoundPlay()
         }
     }
 
@@ -46,7 +43,7 @@ export const SettingsComponent = ({closeSettings, checkboxOnSound, checkboxOffSo
         if (!settings.uiSound) {
             return
         }
-        checkboxOnSound.play(UI_SOUND_VOLUME)
+        checkboxOnSoundPlay()
     }
 
     const renderOption = (option: keyof Settings, value: boolean | string[] = []) => {
