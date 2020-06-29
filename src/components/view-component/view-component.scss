@@ -46,6 +46,11 @@
       cursor: $cursorPointer, auto;
       color: inherit;
       text-decoration: none;
+
+      &:focus {
+        outline: none;
+        box-shadow: $hoverBox;
+      }
     }
   }
 }

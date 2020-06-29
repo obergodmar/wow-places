@@ -1,50 +1,10 @@
-interface Config {
-	volume?: number
-}
-
-const name = 'UIAudio'
-
 export default class Sound {
 	public audio: HTMLAudioElement
 	private volume: number
 
-	constructor(file: string, config?: Config) {
-		const validateURI = (fileURI: string) => {
-			if (fileURI) {
-				return fileURI
-			} else {
-				throw Error('Requires valid URI path for "file"')
-			}
-		}
-
-		const volume = this.validateVolume(config && config.volume)
-
-		const appendAudioElement = (fileValue: string) => {
-			const hashFn = (str: string) => {
-				let hash = 0
-				if (str.length === 0) {
-					return hash
-				}
-				for (let i = 0; i < str.length; i++) {
-					const char = str.charCodeAt(i)
-					hash = (hash << 5) - hash + char
-					hash = hash & hash
-				}
-				return Math.abs(hash)
-			}
-			const id = `${name}-${hashFn(fileValue)}`
-			const audioElement = document.createElement('audio')
-
-			audioElement.id = id
-			audioElement.src = file
-			audioElement.preload = 'auto'
-
-			document.body.appendChild(audioElement)
-			return file
-		}
-
-		const audioNode = appendAudioElement(validateURI(file))
-		this.audio = new Audio(audioNode)
+	constructor(file: string, volumeValue?: number) {
+		const volume = this.validateVolume(volumeValue)
+		this.audio = new Audio(file)
 		this.audio.load()
 		this.volume = volume
 	}

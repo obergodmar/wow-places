@@ -1,17 +1,21 @@
 import * as React from 'react'
 import { useEffect, useMemo, useState } from 'react'
 
+import { useSettings } from '../../hooks'
 import { Plug } from '../../assets'
 import './preview-component.scss'
+import { BorderedHeader } from '..'
 
 interface Props {
+    name?: string
     isLoading: boolean
     src: string
     value: number
     handleChange: (value: number) => void
 }
 
-export const PreviewComponent = ({src, value, handleChange, isLoading}: Props) => {
+export const PreviewComponent = ({name = '', src, value, handleChange, isLoading}: Props) => {
+    const {settings: {language}} = useSettings()
     const [isLoaded, setLoaded] = useState(false)
     const image = useMemo(() => {
         setLoaded(false)
@@ -39,6 +43,7 @@ export const PreviewComponent = ({src, value, handleChange, isLoading}: Props) =
                     onContextMenu={handleClick}
                     onClick={handleClick}
                     style={{
+                        margin: `${name ? '10px 5px' : '5px'}`,
                         backgroundImage: `url(${isLoaded ? image.src : Plug})`
                     }}
                     className={
@@ -48,7 +53,15 @@ export const PreviewComponent = ({src, value, handleChange, isLoading}: Props) =
                                 ? 'preview--loading'
                                 : ''}`
                     }
-            />
+            >
+                {name && (
+                        <div className='preview-name'>
+                            <BorderedHeader>
+                                {language[name as keyof typeof language]}
+                            </BorderedHeader>
+                        </div>
+                )}
+            </div>
     )
 }
 

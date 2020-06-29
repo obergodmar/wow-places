@@ -8,7 +8,7 @@
 
   &:focus {
     outline: none;
-    box-shadow: inset $hoverColor;
+    box-shadow: inset $hoverBox;
   }
 
   &--checked {

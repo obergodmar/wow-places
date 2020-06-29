@@ -1,0 +1,32 @@
+@import "../../app/style";
+
+$rangeWidth: 90px;
+$rangeHeight: 3px;
+
+.range {
+  position: relative;
+  height: $rangeHeight;
+  width: $rangeWidth;
+  border: 3px double $fontColor;
+  border-image: $rangeBorder 5 5 5 5;
+  background: $rangeBackground center repeat;
+  border-image-width: 4px;
+  border-image-outset: 2px 0;
+  border-image-repeat: round round;
+  border-radius: 6px;
+
+  &-stick {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background-image: $range;
+    left: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: $hoverBox;
+  }
+}

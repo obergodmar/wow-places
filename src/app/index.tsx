@@ -1,28 +1,26 @@
 import * as React from 'react'
 import { KeyboardEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import Sound from '../modules/sound'
 
-import { PanelComponent, PreviewComponent, SettingsComponent, ViewComponent } from '../components'
+import { MusicComponent, PanelComponent, PreviewComponent, SettingsComponent, ViewComponent } from '../components'
 import places from '../assets'
-import { delay, UI_MUSIC_VOLUME, UI_SOUND_VOLUME } from '../utils'
+import { delay, soundLoad, UI_SOUND_VOLUME } from '../utils'
 import { useSettings } from '../hooks'
 
-import PanelOpenAudio from '../assets/audio/sound/panel-open.ogg'
-import PanelCloseAudio from '../assets/audio/sound/panel-close.ogg'
+import PanelOpenAudio from '../assets/audio/panel-open.ogg'
+import PanelCloseAudio from '../assets/audio/panel-close.ogg'
 
-import SettingsOpenAudio from '../assets/audio/sound/menu-open.ogg'
-import SettingsCloseAudio from '../assets/audio/sound/menu-close.ogg'
+import SettingsOpenAudio from '../assets/audio/menu-open.ogg'
+import SettingsCloseAudio from '../assets/audio/menu-close.ogg'
 
-import CheckBoxOnAudio from '../assets/audio/sound/check-box-on.ogg'
-import CheckBoxOffAudio from '../assets/audio/sound/check-box-off.ogg'
+import CheckBoxOnAudio from '../assets/audio/check-box-on.ogg'
+import CheckBoxOffAudio from '../assets/audio/check-box-off.ogg'
 
-import StormwindParkMusic1 from '../assets/audio/music/stormwind-park-music-1.mp3'
-import StormwindParkMusic2 from '../assets/audio/music/stormwind-park-music-2.mp3'
+import Sound from '../modules/sound'
 
 import './style.scss'
 
 export default function App() {
-    const {settings} = useSettings()
+    const {settings: {uiSound, musicVolume, language}} = useSettings()
     const [isSettingsShown, setSettingsShown] = useState(false)
     const [isLoading, setLoading] = useState(false)
     const [isPlaying, setPlaying] = useState(false)
@@ -31,12 +29,6 @@ export default function App() {
     const [activePlace, setActivePlace] = useState(0)
     const [activeView, setActiveView] = useState(0)
 
-    const soundLoad = (soundFile: string, soundVolume: number) => {
-        const sound = new Sound(soundFile)
-        sound.setVolume(soundVolume)
-        return sound
-    }
-
     const panelOpenSound = useMemo(() => soundLoad(PanelOpenAudio, UI_SOUND_VOLUME), [])
     const panelCloseSound = useMemo(() => soundLoad(PanelCloseAudio, UI_SOUND_VOLUME), [])
     const settingsOpenSound = useMemo(() => soundLoad(SettingsOpenAudio, UI_SOUND_VOLUME), [])
@@ -44,9 +36,7 @@ export default function App() {
     const checkboxOnSound = useMemo(() => soundLoad(CheckBoxOnAudio, UI_SOUND_VOLUME), [])
     const checkboxOffSound = useMemo(() => soundLoad(CheckBoxOffAudio, UI_SOUND_VOLUME), [])
 
-    const StormwindMusic1 = useMemo(() => soundLoad(StormwindParkMusic1, UI_MUSIC_VOLUME), [])
-    const StormwindMusic2 = useMemo(() => soundLoad(StormwindParkMusic2, UI_MUSIC_VOLUME), [])
-    const [currentPlaying, setCurrentPlaying] = useState(StormwindMusic1)
+    const [currentPlaying, setCurrentPlaying] = useState<Sound>()
 
     const app = useRef<HTMLDivElement>(null)
 
@@ -60,20 +50,20 @@ export default function App() {
         setBottomPanelShown(!isBottomPanelShown)
     }, [isBottomPanelShown])
 
-    const handleLeftPreviewClick = useCallback((value: number) => {
-        setActivePlace(value)
-    }, [])
-
-    const handleBottomPreviewClick = (value: number) => {
+    const delayedChange = useCallback((fn: (value: number) => void, value: number) => {
         if (isLoading) {
             return
         }
-        setActiveView(value)
+        fn(value)
         setLoading(true)
         delay().then(() => {
             setLoading(false)
         })
-    }
+    }, [isLoading])
+
+    const handleLeftPreviewClick = (value: number) => delayedChange(setActivePlace, value)
+
+    const handleBottomPreviewClick = (value: number) => delayedChange(setActiveView, value)
 
     useEffect(() => {
         if (app && app.current) {
@@ -82,40 +72,24 @@ export default function App() {
     }, [app])
 
     useLayoutEffect(() => {
-        document.title = settings.language['place.stormwind-park']
-    }, [settings.language])
+        document.title = language[`place.${places[activePlace].name}` as keyof typeof language]
+    }, [activePlace, language])
 
     useEffect(() => {
-        StormwindMusic1.audio.onplay = () => {
-            setCurrentPlaying(StormwindMusic1)
-            setPlaying(true)
+        if (!currentPlaying) {
+            return
         }
-        StormwindMusic2.audio.onplay = () => {
-            setCurrentPlaying(StormwindMusic2)
-            setPlaying(true)
-        }
-        StormwindMusic1.audio.onended = () => {
-            StormwindMusic2.playMusic()
-        }
-        StormwindMusic2.audio.onended = () => {
-            StormwindMusic1.playMusic()
-        }
-        return () => {
-            StormwindMusic1.audio.onplay = null
-            StormwindMusic2.audio.onplay = null
-            StormwindMusic1.audio.onended = null
-            StormwindMusic2.audio.onended = null
-        }
-    }, [StormwindMusic1, StormwindMusic2])
+        currentPlaying.setVolume(musicVolume)
+    }, [currentPlaying, musicVolume])
 
-    const appClick = () => currentPlaying.playMusic()
+    const appClick = () => currentPlaying && currentPlaying.playMusic()
 
     const openCloseSettings = () => {
         setSettingsShown(!isSettingsShown)
         if (app && app.current) {
             app.current.focus()
         }
-        if (!settings.uiSound) {
+        if (!uiSound) {
             return
         }
         if (isSettingsShown) {
@@ -136,6 +110,9 @@ export default function App() {
                 openCloseSettings()
                 break
             case 32:
+                if (!currentPlaying) {
+                    return
+                }
                 if (isPlaying) {
                     currentPlaying.pause()
                     setPlaying(false)
@@ -164,6 +141,7 @@ export default function App() {
                 >
                     {places.map((place, index) => (
                             <PreviewComponent
+                                    name={`place.${place.name}`}
                                     isLoading={isLoading}
                                     key={index}
                                     value={index}
@@ -198,6 +176,11 @@ export default function App() {
                         />
                 )
                 }
+                <MusicComponent
+                        music={places[activePlace].music}
+                        setPlaying={setPlaying}
+                        setCurrentPlaying={setCurrentPlaying}
+                />
             </div>
     )
 }

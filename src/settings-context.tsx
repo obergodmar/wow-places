@@ -6,6 +6,7 @@ import en from './locales/en.json'
 
 export interface Settings {
     language: typeof ru | typeof en
+    musicVolume: number
     currentLanguage: string
     uiLanguage: string[]
     uiSound: boolean
@@ -24,6 +25,7 @@ interface Props {
 const defaultSettings: SettingsContextType = {
     settings: {
         language: ru,
+        musicVolume: 1.0,
         currentLanguage: ru['ui.language'],
         uiLanguage: [ru['ui.language'], en['ui.language']],
         uiSound: true

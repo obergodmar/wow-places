@@ -1,6 +1,7 @@
 @import "../assets/assets";
 
-$hoverColor: 0 0 4px 2px rgba(173, 154, 32, 0.75);
+$hoverColor: rgba(173, 154, 32, 0.75);
+$hoverBox: 0 0 4px 2px $hoverColor;
 $previewHeight: 180px;
 $previewWidth: 320px;
 $font: 'Arial Narrow';
@@ -59,7 +60,7 @@ button {
 
   &:focus {
     outline: none;
-    box-shadow: $hoverColor;
+    box-shadow: $hoverBox;
   }
 
   &:active {

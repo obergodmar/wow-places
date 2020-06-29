@@ -36,7 +36,7 @@ $dropDownOutset: $DropDownBorder / 2;
     background-repeat: repeat;
   }
 
-  &:active {
+  &:active:not(.select--opened) {
     .select-arrow {
       background-image: $selectArrowClick;
     }
@@ -44,7 +44,7 @@ $dropDownOutset: $DropDownBorder / 2;
 
   &:focus {
     outline: none;
-    box-shadow: inset $hoverColor;
+    box-shadow: inset $hoverBox;
   }
 
   &-arrow {
@@ -54,6 +54,7 @@ $dropDownOutset: $DropDownBorder / 2;
   }
 
   &-drop-down {
+    z-index: 7;
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -81,7 +82,7 @@ $dropDownOutset: $DropDownBorder / 2;
     display: flex;
     align-items: center;
     justify-content: center;
-    line-height: 17px;
+    height: 20px;
 
     &:hover {
       background: linear-gradient(90deg,
@@ -89,6 +90,10 @@ $dropDownOutset: $DropDownBorder / 2;
               rgba(173, 154, 32, 0.5) 25%,
               rgba(173, 154, 32, 0.5) 75%,
               rgba(173, 154, 32, 0.1) 100%);
+    }
+
+    &:active {
+      align-items: flex-end;
     }
 
     &:focus {

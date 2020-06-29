@@ -6,5 +6,7 @@
   "ui.uiSound": "Звуки интерфейса",
   "ui.uiLanguage": "Язык",
   "ui.language": "Русский",
-  "place.stormwind-park": "Парк Штормграда"
+  "ui.musicVolume": "Музыка",
+  "place.stormwind-park": "Парк Штормграда",
+  "place.halls-of-valor": "Чертоги Доблести"
 }

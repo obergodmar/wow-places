@@ -2,7 +2,6 @@
 
 $panelWidth: $previewWidth + 40px;
 $panelHeight: $previewHeight + 40px;
-
 $panelBorderSize: 8px;
 
 .panel {
@@ -33,7 +32,7 @@ $panelBorderSize: 8px;
     border-top: $panelBorderSize double $fontColor;
     border-image: $borderTop 16 32 16 32;
     border-image-outset: $panelBorderSize - 2px 0 0 0;
-    border-image-width: $panelBorderSize*2 0 0 100%;
+    border-image-width: $panelBorderSize * 2 0 0 100%;
     border-image-repeat: round round;
 
     .panel-content {

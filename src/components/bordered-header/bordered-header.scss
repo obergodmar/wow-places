@@ -1,0 +1,25 @@
+@import "../../app/style";
+
+$borderWidth: 12px;
+$borderOutset: 8px;
+
+.header {
+  font-family: $font;
+  font-size: $fontSize;
+  text-shadow: $fontShadow;
+  letter-spacing: $fontSpacing;
+  color: $fontColor;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 2px;
+  border: $borderWidth double $fontColor;
+  border-image: $border 15 15 15 15 fill;
+  border-image-outset: $borderOutset;
+  border-image-repeat: stretch stretch;
+  background-image: $backgroundTexture;
+  background-repeat: repeat;
+}

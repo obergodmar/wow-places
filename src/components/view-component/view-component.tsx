@@ -27,7 +27,7 @@ export const ViewComponent = ({src}: Props) => {
         return () => {
             clearTimeout(timer)
         }
-    }, [src, imageSrc])
+    }, [src])
 
     return (
             <div

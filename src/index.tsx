@@ -9,6 +9,7 @@ import en from './locales/en.json'
 
 const defaultSettings: Settings = {
     language: ru,
+    musicVolume: 1.0,
     currentLanguage: ru['ui.language'],
     uiLanguage: [ru['ui.language'], en['ui.language']],
     uiSound: true

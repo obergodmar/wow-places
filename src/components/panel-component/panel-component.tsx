@@ -1,7 +1,17 @@
 import * as React from 'react'
-import { FocusEvent, MouseEvent, useEffect, useMemo, useRef, useState, WheelEvent } from 'react'
+import {
+    FocusEvent,
+    MouseEvent,
+    TouchEvent,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+    WheelEvent
+} from 'react'
 
-import { PREVIEW_HEIGHT, PREVIEW_WIDTH } from '../../utils'
+import { ANIMATION_DURATION, debounce, PREVIEW_HEIGHT, PREVIEW_WIDTH } from '../../utils'
 import { useSettings } from '../../hooks'
 
 import './panel-component.scss'
@@ -28,18 +38,11 @@ export const PanelComponent = ({
     const {settings: {language, uiSound}} = useSettings()
     const [isDrag, setDrag] = useState(false)
     const [trackMouse, setTrackMouse] = useState(0)
+    const [position, setPosition] = useState(0)
     const [lastPosition, setLastPosition] = useState(0)
 
     const panel = useRef<HTMLInputElement>(null)
-    let position = 0
     const isBottom = useMemo(() => orientation === 'bottom', [orientation])
-
-    useEffect(() => {
-        if (!isShown && panel.current) {
-            panel.current.style.transform = 'unset'
-            setLastPosition(0)
-        }
-    }, [isShown])
 
     const handleClick = (event: MouseEvent) => {
         event.preventDefault()
@@ -54,14 +57,63 @@ export const PanelComponent = ({
         }
     }
 
+    const resizePanel = useCallback((animate = true) => {
+        if (!panel.current) {
+            return
+        }
+        if (animate) {
+            panel.current.style.transition = `transform 0.5s`
+        }
+        panel.current.style.transform = `unset`
+        setTrackMouse(0)
+        setPosition(0)
+        setLastPosition(0)
+    }, [panel])
+
+    useEffect(() => {
+        let timeout: NodeJS.Timeout
+        const handleResize = debounce(() => {
+            resizePanel()
+            timeout = setTimeout(() => {
+                if (!panel || !panel.current) {
+                    return
+                }
+                panel.current.style.transition = 'unset'
+            }, ANIMATION_DURATION)
+        }, 100)
+        window.addEventListener('resize', handleResize)
+        return () => {
+            if (timeout) {
+                clearTimeout(timeout)
+            }
+            window.removeEventListener('resize', handleResize)
+        }
+    }, [panel, resizePanel])
+
+    useEffect(() => {
+        if (!isShown) {
+            resizePanel(false)
+        }
+    }, [isShown, resizePanel])
+
     const handleDragScroll = (e: MouseEvent) => {
         if (!isDrag) {
             return
         }
-
+        const {innerWidth, innerHeight} = window
+        const windowSize = isBottom ? innerWidth : innerHeight
+        const containerSize = itemsCount * ((isBottom ? PREVIEW_WIDTH : PREVIEW_HEIGHT) + 15)
+        if (!(containerSize > windowSize)) {
+            return
+        }
+        const overflow = Math.abs(containerSize - windowSize)
         const {clientX, clientY} = e
         const value = isBottom ? clientX : clientY
-        position = trackMouse - value + lastPosition
+        const diff = trackMouse - value + lastPosition
+        if (Math.abs(diff) > overflow + 40 || diff < 0) {
+            return
+        }
+        setPosition(diff)
         changePosition()
     }
 
@@ -69,39 +121,71 @@ export const PanelComponent = ({
         if (!panel.current) {
             return
         }
-        const {innerHeight, innerWidth} = window
-        const overflowWindow = isBottom ? innerWidth : innerHeight
-        const overflowContainer = itemsCount * ((isBottom ? PREVIEW_WIDTH : PREVIEW_HEIGHT) + 10)
-        const overflow = overflowContainer > overflowWindow ? overflowContainer : overflowWindow
-        if (Math.abs(position) > overflow) {
-            position = -position
-        }
         panel.current.style.transform = `translate${isBottom ? 'X' : 'Y'}(${-position}px)`
     }
 
-    const handlePress = (e: MouseEvent) => {
-        e.preventDefault()
+    const handleMouseDown = (e: MouseEvent) => {
+        e.nativeEvent.stopImmediatePropagation()
         setTrackMouse(isBottom ? e.clientX : e.clientY)
         setDrag(true)
     }
 
-    const handleFree = (e: MouseEvent | FocusEvent) => {
-        e.preventDefault()
+    const handleTouchstart = (e: TouchEvent) => {
+        const {touches} = e
+        e.nativeEvent.stopImmediatePropagation()
+        setTrackMouse(isBottom ? touches[0].clientX : touches[0].clientY)
+        setDrag(true)
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+        const {touches} = e
+        const {innerWidth, innerHeight} = window
+        const windowSize = isBottom ? innerWidth : innerHeight
+        const containerSize = itemsCount * ((isBottom ? PREVIEW_WIDTH : PREVIEW_HEIGHT) + 15)
+        if (!(containerSize > windowSize)) {
+            return
+        }
+        const overflow = Math.abs(containerSize - windowSize)
+        const {clientX, clientY} = touches[0]
+        const value = isBottom ? clientX : clientY
+        const diff = trackMouse - value + lastPosition
+        if (Math.abs(diff) > overflow + 40 || diff < 0) {
+            return
+        }
+        setPosition(diff)
+        changePosition()
+    }
+
+    const handleFree = (e: MouseEvent | FocusEvent | TouchEvent) => {
+        e.nativeEvent.stopImmediatePropagation()
         setDrag(false)
         setLastPosition(position)
     }
 
     const handleScroll = (e: WheelEvent) => {
         const {deltaY} = e
-        const value = deltaY > 0 ? 50 : -50
-        position = value + lastPosition
+        const {innerWidth, innerHeight} = window
+        const windowSize = isBottom ? innerWidth : innerHeight
+        const containerSize = itemsCount * ((isBottom ? PREVIEW_WIDTH : PREVIEW_HEIGHT) + 15)
+        if (!(containerSize > windowSize)) {
+            return
+        }
+        const overflow = Math.abs(containerSize - windowSize)
+        const diff = (deltaY > 0 ? 80 : -80) + lastPosition
+        if (Math.abs(diff) > overflow + 40 || diff < 0) {
+            return
+        }
+        setPosition(diff)
         changePosition()
         setLastPosition(position)
     }
 
     return (
             <div
-                    onMouseDown={handlePress}
+                    onMouseDown={handleMouseDown}
+                    onTouchStart={handleTouchstart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleFree}
                     onMouseUp={handleFree}
                     onMouseMove={handleDragScroll}
                     onMouseLeave={handleFree}

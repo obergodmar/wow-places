@@ -3,8 +3,12 @@
 $previewBorderWidth: 10px;
 $plugSize: 90px;
 
+$previewNameWidth: 250px;
+$previewNameHeight: 25px;
+
 .preview {
   z-index: 4;
+  position: relative;
   cursor: $cursorInteract, auto;
   min-width: $previewWidth;
   min-height: $previewHeight;
@@ -19,6 +23,15 @@ $plugSize: 90px;
   opacity: 1;
   transition: opacity $transitionDuration $transitionType;
 
+  &-name {
+    position: absolute;
+    width: $previewNameWidth;
+    height: $previewNameHeight;
+    bottom: -$previewNameHeight + 5px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
   &--not-loaded {
     background-size: $plugSize;
   }
@@ -28,6 +41,12 @@ $plugSize: 90px;
   }
 
   &:hover {
-    box-shadow: $hoverColor;
+    box-shadow: $hoverBox;
+
+    .preview-name {
+      box-shadow: -4px 4px 4px 2px $hoverColor,
+      4px 0 4px 2px $hoverColor;
+    }
   }
 }
+

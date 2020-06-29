@@ -4,11 +4,9 @@ import ru from '../../locales/ru.json'
 import en from '../../locales/en.json'
 import { useSettings } from '../../hooks'
 import { Settings } from '../../settings-context'
-import { CheckBoxComponent, SelectComponent } from '..'
+import { BorderedHeader, CheckBoxComponent, RangeComponent, SelectComponent } from '..'
 
 import './settings-component.scss'
-
-type languageValue = keyof typeof ru;
 
 interface Props {
     closeSettings: () => void
@@ -46,29 +44,51 @@ export const SettingsComponent = ({closeSettings, checkboxOnSoundPlay, checkboxO
         checkboxOnSoundPlay()
     }
 
-    const renderOption = (option: keyof Settings, value: boolean | string[] = []) => {
+    const handleChangeRange = (value: number) => {
+        checkboxOnSoundPlay()
+        saveSettings!({...settings, musicVolume: value})
+    }
+
+    const chooseOption = (option: keyof Settings) => {
         const {language} = settings
-        const valueName = `ui.${option}` as languageValue
+        switch (typeof settings[option]) {
+            case 'boolean':
+                return (
+                        <CheckBoxComponent
+                                handleClick={handleCheckboxClick}
+                                optionName={option}
+                                value={settings[option] as boolean}
+                        />
+                )
+            case 'object':
+                return (
+                        <SelectComponent
+                                handleChange={handleChangeLanguage}
+                                current={language['ui.language']}
+                                options={settings[option] as []}
+                        >
+                            {language['ui.language']}
+                        </SelectComponent>
+                )
+            case 'number':
+                return (
+                        <RangeComponent
+                                defaultValue={settings[option] as number}
+                                handleChange={handleChangeRange}
+                        />
+                )
+        }
+    }
+
+    const renderOption = (option: keyof Settings) => {
+        const {language} = settings
+        const valueName = `ui.${option}` as keyof typeof language
         return (
                 <div className='settings-option'>
                     <div className='settings-option-name'>
                         {language[valueName]}
                     </div>
-                    {typeof value !== 'boolean' ? (
-                            <SelectComponent
-                                    handleChange={handleChangeLanguage}
-                                    current={language['ui.language']}
-                                    options={settings[option] as []}
-                            >
-                                {language['ui.language']}
-                            </SelectComponent>
-                    ) : (
-                            <CheckBoxComponent
-                                    handleClick={handleCheckboxClick}
-                                    optionName={option}
-                                    value={value}
-                            />
-                    )}
+                    {chooseOption(option)}
                 </div>
         )
     }
@@ -76,11 +96,14 @@ export const SettingsComponent = ({closeSettings, checkboxOnSoundPlay, checkboxO
     return (
             <div className='settings'>
                 <div className='settings-header'>
-                    {settings.language['ui.main-menu']}
+                    <BorderedHeader>
+                        {settings.language['ui.main-menu']}
+                    </BorderedHeader>
                 </div>
                 <div className='settings-content'>
-                    {renderOption('uiSound', settings.uiSound)}
-                    {renderOption('uiLanguage', settings.uiLanguage)}
+                    {renderOption('uiLanguage')}
+                    {renderOption('musicVolume')}
+                    {renderOption('uiSound')}
                 </div>
                 <button
                         className='settings-button'

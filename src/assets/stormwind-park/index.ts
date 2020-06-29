@@ -1,7 +1,10 @@
 import preview from './preview'
 import view from './view'
+import music from './music'
 
 export default {
-	preview,
-	view
+	name: 'stormwind-park',
+	music,
+	view,
+	preview
 }

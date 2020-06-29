@@ -1,10 +1,12 @@
 {
   "ui.button.places": "Places",
-  "ui.button.views": "View",
+  "ui.button.views": "Views",
   "ui.button.close": "Close",
   "ui.main-menu": "Main Menu",
   "ui.uiSound": "UI Sound",
   "ui.uiLanguage": "Language",
   "ui.language": "English",
-  "place.stormwind-park": "Stormwind Park"
+  "ui.musicVolume": "Music",
+  "place.stormwind-park": "Stormwind Park",
+  "place.halls-of-valor": "Halls Of Valor"
 }
