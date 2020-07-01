@@ -56,7 +56,7 @@ export const RangeComponent = ({handleChange, defaultValue}: Props) => {
         }
         const {width, left} = (stick.current.parentNode as HTMLDivElement).getBoundingClientRect()
         const {clientX} = e
-        const diff = clientX - left
+        const diff = clientX - left - 20
         if (diff > width - 35 || diff < 0) {
             return
         }

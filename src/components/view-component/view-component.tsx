@@ -37,10 +37,6 @@ export const ViewComponent = ({src}: Props) => {
                     }}
             >
                 <div className={`view-background ${isLoaded ? 'view-background--loaded' : ''}`}/>
-                <div className='view-author'>
-                    <a href="https://github.com/obergodmar">obergodmar</a>
-                    <span>1.1.0</span>
-                </div>
             </div>
     )
 }

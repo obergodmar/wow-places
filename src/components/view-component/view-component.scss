@@ -25,34 +25,6 @@
       opacity: 0;
     }
   }
-
-
-  &-author {
-    z-index: 2;
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    width: 110px;
-    font-family: $font;
-    text-shadow: $fontShadow;
-    color: $fontColor;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    opacity: .3;
-
-    a {
-      cursor: $cursorPointer, auto;
-      color: inherit;
-      text-decoration: none;
-
-      &:focus {
-        outline: none;
-        box-shadow: $hoverBox;
-      }
-    }
-  }
 }
 
 @keyframes pulse {

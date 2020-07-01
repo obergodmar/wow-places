@@ -20,15 +20,12 @@ export const randomNumber = (min: number, max: number) => (
 	Math.floor(Math.random() * (max - min)) + min
 )
 
-export const debounce = (fn: () => any, ms: number) => {
-	let timer: NodeJS.Timeout | null
-	return () => {
+export function debounce(fn: (args: any) => any, ms: number) {
+	let timer: NodeJS.Timeout
+	return (...args: any) => {
 		if (timer) {
 			clearTimeout(timer)
 		}
-		timer = setTimeout(() => {
-			timer = null
-			fn()
-		}, ms)
+		timer = setTimeout(() => fn.apply(this, args), ms)
 	}
 }

@@ -57,7 +57,7 @@ export const PanelComponent = ({
         }
     }
 
-    const resizePanel = useCallback((animate = true) => {
+    const resetPanel = useCallback((animate = true) => {
         if (!panel.current) {
             return
         }
@@ -73,7 +73,7 @@ export const PanelComponent = ({
     useEffect(() => {
         let timeout: NodeJS.Timeout
         const handleResize = debounce(() => {
-            resizePanel()
+            resetPanel()
             timeout = setTimeout(() => {
                 if (!panel || !panel.current) {
                     return
@@ -88,33 +88,48 @@ export const PanelComponent = ({
             }
             window.removeEventListener('resize', handleResize)
         }
-    }, [panel, resizePanel])
+    }, [panel, resetPanel])
 
     useEffect(() => {
         if (!isShown) {
-            resizePanel(false)
+            resetPanel(false)
         }
-    }, [isShown, resizePanel])
+    }, [isShown, resetPanel])
 
     const handleDragScroll = (e: MouseEvent) => {
         if (!isDrag) {
             return
         }
+        const overflow = windowOverflow()
+        if (!overflow) {
+            return
+        }
+
+        const {clientX, clientY} = e
+        const value = isBottom ? clientX : clientY
+        const diff = limiter(value, overflow)
+        setPosition(diff)
+        changePosition()
+    }
+
+    const windowOverflow = () => {
         const {innerWidth, innerHeight} = window
         const windowSize = isBottom ? innerWidth : innerHeight
         const containerSize = itemsCount * ((isBottom ? PREVIEW_WIDTH : PREVIEW_HEIGHT) + 15)
         if (!(containerSize > windowSize)) {
-            return
+            return 0
         }
-        const overflow = Math.abs(containerSize - windowSize)
-        const {clientX, clientY} = e
-        const value = isBottom ? clientX : clientY
-        const diff = trackMouse - value + lastPosition
-        if (Math.abs(diff) > overflow + 40 || diff < 0) {
-            return
+        return Math.abs(containerSize - windowSize)
+    }
+
+    const limiter = (value: number, overflow: number, isWheel: boolean = false) => {
+        let diff = (!isWheel ? trackMouse : 0) - value + lastPosition
+        if (Math.abs(diff) > overflow + 40) {
+            diff = overflow + 40
+        } else if (diff < 0) {
+            diff = 0
         }
-        setPosition(diff)
-        changePosition()
+        return diff
     }
 
     const changePosition = () => {
@@ -125,8 +140,9 @@ export const PanelComponent = ({
     }
 
     const handleMouseDown = (e: MouseEvent) => {
+        const {clientX, clientY} = e
         e.nativeEvent.stopImmediatePropagation()
-        setTrackMouse(isBottom ? e.clientX : e.clientY)
+        setTrackMouse(isBottom ? clientX : clientY)
         setDrag(true)
     }
 
@@ -139,19 +155,14 @@ export const PanelComponent = ({
 
     const handleTouchMove = (e: TouchEvent) => {
         const {touches} = e
-        const {innerWidth, innerHeight} = window
-        const windowSize = isBottom ? innerWidth : innerHeight
-        const containerSize = itemsCount * ((isBottom ? PREVIEW_WIDTH : PREVIEW_HEIGHT) + 15)
-        if (!(containerSize > windowSize)) {
-            return
-        }
-        const overflow = Math.abs(containerSize - windowSize)
         const {clientX, clientY} = touches[0]
-        const value = isBottom ? clientX : clientY
-        const diff = trackMouse - value + lastPosition
-        if (Math.abs(diff) > overflow + 40 || diff < 0) {
+        const overflow = windowOverflow()
+        if (!overflow) {
             return
         }
+
+        const value = isBottom ? clientX : clientY
+        const diff = limiter(value, overflow)
         setPosition(diff)
         changePosition()
     }
@@ -164,17 +175,13 @@ export const PanelComponent = ({
 
     const handleScroll = (e: WheelEvent) => {
         const {deltaY} = e
-        const {innerWidth, innerHeight} = window
-        const windowSize = isBottom ? innerWidth : innerHeight
-        const containerSize = itemsCount * ((isBottom ? PREVIEW_WIDTH : PREVIEW_HEIGHT) + 15)
-        if (!(containerSize > windowSize)) {
+        const overflow = windowOverflow()
+        if (!overflow) {
             return
         }
-        const overflow = Math.abs(containerSize - windowSize)
-        const diff = (deltaY > 0 ? 80 : -80) + lastPosition
-        if (Math.abs(diff) > overflow + 40 || diff < 0) {
-            return
-        }
+
+        const value = deltaY > 0 ? 80 : -80
+        const diff = limiter(value, overflow, true)
         setPosition(diff)
         changePosition()
         setLastPosition(position)

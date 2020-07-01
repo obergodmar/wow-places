@@ -1,7 +1,15 @@
 import * as React from 'react'
 import { KeyboardEvent, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
-import { MusicComponent, PanelComponent, PreviewComponent, SettingsComponent, ViewComponent } from '../components'
+import {
+    MainMenuComponent,
+    MenuItemComponent,
+    MusicComponent,
+    PanelComponent,
+    PreviewComponent,
+    SettingsComponent,
+    ViewComponent
+} from '../components'
 import places from '../assets'
 import { delay, soundLoad, UI_SOUND_VOLUME } from '../utils'
 import { useSettings } from '../hooks'
@@ -131,6 +139,16 @@ export default function App() {
                     className='main'
             >
                 <ViewComponent src={places[activePlace].view[activeView]}/>
+                <MainMenuComponent>
+                    <div className='author'>
+                        <a href="https://github.com/obergodmar">obergodmar</a>
+                        <span>v1.2.0</span>
+                    </div>
+                    <MenuItemComponent
+                            isActive={isSettingsShown}
+                            handleClick={openCloseSettings}
+                    />
+                </MainMenuComponent>
                 <PanelComponent
                         openSoundPlay={panelOpenSound.playSound}
                         closeSoundPlay={panelCloseSound.playSound}

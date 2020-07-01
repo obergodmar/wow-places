@@ -1,0 +1,21 @@
+@import "../../app/style";
+
+$menuHeight: 42px;
+$menuWidth: 290px;
+
+.main-menu {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border: 1px double $fontColor;
+  border-image: $rangeBorder 5 5 5 5;
+  background: $panelBackground center repeat;
+  border-image-width: 5px;
+  border-image-repeat: round round;
+  border-radius: 6px;
+  padding: 2px 3px;
+}

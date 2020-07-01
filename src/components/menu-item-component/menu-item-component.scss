@@ -1,0 +1,31 @@
+@import '../../app/style';
+
+$menuItemWidth: 32px;
+$menuItemHeight: 41px;
+
+.menu-item {
+  width: $menuItemWidth - 4px;
+  height: $menuItemHeight - 4px;
+  border-radius: 6px;
+  background-image: $helpButton;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: $menuItemWidth $menuItemHeight;
+
+  &--active {
+    background-image: $helpButtonClick;
+  }
+
+  &:hover {
+    box-shadow: $hoverBox;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: $hoverBox;
+  }
+
+  &:active {
+    background-image: $helpButtonClick;
+  }
+}
