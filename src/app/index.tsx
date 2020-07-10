@@ -81,6 +81,7 @@ export default function App() {
 
     useLayoutEffect(() => {
         document.title = language[`place.${places[activePlace].name}` as keyof typeof language]
+        setActiveView(0)
     }, [activePlace, language])
 
     useEffect(() => {
