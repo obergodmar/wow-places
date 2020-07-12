@@ -4,6 +4,7 @@ $menuItemWidth: 32px;
 $menuItemHeight: 41px;
 
 .menu-item {
+  z-index: 4;
   width: $menuItemWidth - 4px;
   height: $menuItemHeight - 4px;
   border-radius: 6px;

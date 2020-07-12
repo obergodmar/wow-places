@@ -7,7 +7,10 @@ export {
 	UI_MUSIC_VOLUME,
 	UI_SOUND_VOLUME,
 	LOADING_DURATION,
-	ANIMATION_DURATION
+	ANIMATION_DURATION,
+	DEFAULT_HEIGHT,
+	DEFAULT_WIDTH,
+	SPACE
 } from './constants'
 
 export const delay = () => new Promise(resolve => setTimeout(resolve, LOADING_DURATION))

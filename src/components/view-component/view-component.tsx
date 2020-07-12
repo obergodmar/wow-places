@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import { FocusEvent, MouseEvent, TouchEvent, useCallback, useEffect, useState } from 'react'
 
 import { Background } from '../../assets'
-import { ANIMATION_DURATION } from '../../utils'
+import { ANIMATION_DURATION, DEFAULT_HEIGHT, DEFAULT_WIDTH } from '../../utils'
 
 import './view-component.scss'
 
@@ -10,11 +10,42 @@ interface Props {
     src: string
 }
 
+interface Position {
+    x: number
+    y: number
+}
+
+const initialPosition = {
+    x: 0,
+    y: 0
+}
+
 export const ViewComponent = ({src}: Props) => {
     const [imageSrc, setImageSrc] = useState(Background)
     const [isLoaded, setLoaded] = useState(false)
+    const [isDrag, setDrag] = useState(false)
+    const [trackPosition, setTrackPosition] = useState(initialPosition)
+    const [position, setPosition] = useState(initialPosition)
+    const [lastPosition, setLastPosition] = useState(initialPosition)
+
+    const handleResize = useCallback(() => {
+        const {innerWidth, innerHeight} = window
+
+        let width = (innerWidth - DEFAULT_WIDTH) / 2
+        let height = (innerHeight - DEFAULT_HEIGHT) / 2
+
+        if (innerWidth >= DEFAULT_WIDTH) {
+            width = 0
+        }
+        if (innerHeight >= DEFAULT_HEIGHT) {
+            height = 0
+        }
+        setPosition({x: width, y: height})
+        setLastPosition({x: width, y: height})
+    }, [])
 
     useEffect(() => {
+        handleResize()
         setLoaded(false)
         const timer = setTimeout(() => {
             const image = new Image()
@@ -27,16 +58,99 @@ export const ViewComponent = ({src}: Props) => {
         return () => {
             clearTimeout(timer)
         }
-    }, [src])
+    }, [src, handleResize])
+
+    useEffect(() => {
+        window.addEventListener('resize', handleResize)
+        return () => {
+            window.removeEventListener('resize', handleResize)
+        }
+    }, [handleResize])
+
+    const handleTouchMove = (e: TouchEvent) => {
+        const {touches} = e
+        const {innerWidth, innerHeight} = window
+        const width = DEFAULT_WIDTH - innerWidth
+        const height = DEFAULT_HEIGHT - innerHeight
+        const {clientX: x, clientY: y} = touches[0]
+
+        const diff = limiter({x, y}, width, height)
+
+        setPosition(diff)
+    }
+
+    const limiter = (value: Position, width: number, height: number) => {
+        const {x: xValue, y: yValue} = value
+
+        let x = trackPosition.x - xValue + lastPosition.x
+        let y = trackPosition.y - yValue + lastPosition.y
+
+        if (x > 0) {
+            x = 0
+        } else if (x < -width) {
+            x = -width
+        }
+
+        if (y > 0) {
+            y = 0
+        } else if (y < -height) {
+            y = -height
+        }
+
+        return ({x, y})
+    }
+
+    const handleTouchstart = (e: TouchEvent) => {
+        const {touches} = e
+        e.nativeEvent.stopImmediatePropagation()
+        const {clientX: x, clientY: y} = touches[0]
+        setTrackPosition({x, y})
+        setDrag(true)
+    }
+
+    const handleMouseDown = (e: MouseEvent) => {
+        const {clientX, clientY} = e
+        e.nativeEvent.stopImmediatePropagation()
+        setTrackPosition({x: clientX, y: clientY})
+        setDrag(true)
+    }
+
+    const handleFree = (e: MouseEvent | FocusEvent | TouchEvent) => {
+        e.nativeEvent.stopImmediatePropagation()
+        setDrag(false)
+        setLastPosition(position)
+    }
+
+    const handleDragScroll = (e: MouseEvent) => {
+        if (!isDrag) {
+            return
+        }
+        const {innerWidth, innerHeight} = window
+        const width = DEFAULT_WIDTH - innerWidth
+        const height = DEFAULT_HEIGHT - innerHeight
+
+        const {clientX: x, clientY: y} = e
+        const diff = limiter({x, y}, width, height)
+        setPosition(diff)
+    }
 
     return (
             <div
                     className='view'
                     style={{
-                        backgroundImage: `url(${imageSrc})`
+                        backgroundImage: `url(${imageSrc})`,
+                        backgroundPosition: `${position.x}px ${position.y}px`
                     }}
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleDragScroll}
+                    onMouseUp={handleFree}
+                    onTouchMove={handleTouchMove}
+                    onTouchStart={handleTouchstart}
+                    onTouchEnd={handleFree}
+                    onMouseLeave={handleFree}
+                    onBlur={handleFree}
             >
-                <div className={`view-background ${isLoaded ? 'view-background--loaded' : ''}`}/>
+                <div className={`view-background ${isLoaded ? 'view-background--loaded' : ''}`} />
             </div>
     )
 }

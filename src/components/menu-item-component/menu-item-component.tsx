@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { KeyboardEvent } from 'react'
+import { KeyboardEvent, useCallback } from 'react'
 
 import './menu-item-component.scss'
 
@@ -10,12 +10,12 @@ interface Props {
 
 export const MenuItemComponent = ({isActive, handleClick}: Props) => {
 
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = useCallback((e: KeyboardEvent) => {
         if (e.keyCode !== 13 && e.keyCode !== 32) {
             return
         }
         handleClick()
-    }
+    }, [handleClick])
 
     return (
             <div

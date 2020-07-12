@@ -69,9 +69,13 @@ export default function App() {
         })
     }, [isLoading])
 
-    const handleLeftPreviewClick = (value: number) => delayedChange(setActivePlace, value)
+    const handleLeftPreviewClick = useCallback((value: number) =>
+                    delayedChange(setActivePlace, value),
+            [delayedChange])
 
-    const handleBottomPreviewClick = (value: number) => delayedChange(setActiveView, value)
+    const handleBottomPreviewClick = useCallback((value: number) =>
+                    delayedChange(setActiveView, value),
+            [delayedChange])
 
     useEffect(() => {
         if (app && app.current) {
@@ -89,11 +93,12 @@ export default function App() {
             return
         }
         currentPlaying.setVolume(musicVolume)
+        currentPlaying.playMusic()
     }, [currentPlaying, musicVolume])
 
-    const appClick = () => currentPlaying && currentPlaying.playMusic()
+    const appClick = useCallback(() => currentPlaying && currentPlaying.playMusic(), [currentPlaying])
 
-    const openCloseSettings = () => {
+    const openCloseSettings = useCallback(() => {
         setSettingsShown(!isSettingsShown)
         if (app && app.current) {
             app.current.focus()
@@ -106,9 +111,9 @@ export default function App() {
         } else {
             settingsOpenSound.playSound()
         }
-    }
+    }, [app, isSettingsShown, uiSound, settingsCloseSound, settingsOpenSound])
 
-    const handleOpenSettings = (e: KeyboardEvent) => {
+    const handleOpenSettings = useCallback((e: KeyboardEvent) => {
         switch (e.keyCode) {
             case 27:
                 if (isLeftPanelShown || isBottomPanelShown) {
@@ -129,7 +134,7 @@ export default function App() {
                     currentPlaying.playMusic()
                 }
         }
-    }
+    }, [isLeftPanelShown, isBottomPanelShown, isPlaying, currentPlaying, openCloseSettings])
 
     return (
             <div
@@ -139,11 +144,11 @@ export default function App() {
                     tabIndex={0}
                     className='main'
             >
-                <ViewComponent src={places[activePlace].view[activeView]}/>
+                <ViewComponent src={places[activePlace].view[activeView]} />
                 <MainMenuComponent>
                     <div className='author'>
                         <a href="https://github.com/obergodmar">obergodmar</a>
-                        <span>v1.2.0</span>
+                        <span>v1.3.0</span>
                     </div>
                     <MenuItemComponent
                             isActive={isSettingsShown}

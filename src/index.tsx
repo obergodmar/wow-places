@@ -17,7 +17,7 @@ const defaultSettings: Settings = {
 
 ReactDom.render(
         <SettingsProvider settings={defaultSettings}>
-            <App/>
+            <App />
         </SettingsProvider>,
         document.getElementById('root')
 )

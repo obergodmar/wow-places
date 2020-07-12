@@ -18,4 +18,11 @@ $menuWidth: 290px;
   border-image-repeat: round round;
   border-radius: 6px;
   padding: 2px 3px;
+
+  &:hover {
+    .author {
+      width: 130px;
+      opacity: 1;
+    }
+  }
 }

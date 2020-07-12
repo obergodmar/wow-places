@@ -11,7 +11,7 @@ import {
     WheelEvent
 } from 'react'
 
-import { ANIMATION_DURATION, debounce, PREVIEW_HEIGHT, PREVIEW_WIDTH } from '../../utils'
+import { ANIMATION_DURATION, debounce, PREVIEW_HEIGHT, PREVIEW_WIDTH, SPACE } from '../../utils'
 import { useSettings } from '../../hooks'
 
 import './panel-component.scss'
@@ -37,7 +37,7 @@ export const PanelComponent = ({
 }: Props) => {
     const {settings: {language, uiSound}} = useSettings()
     const [isDrag, setDrag] = useState(false)
-    const [trackMouse, setTrackMouse] = useState(0)
+    const [trackPosition, setTrackPosition] = useState(0)
     const [position, setPosition] = useState(0)
     const [lastPosition, setLastPosition] = useState(0)
 
@@ -65,7 +65,7 @@ export const PanelComponent = ({
             panel.current.style.transition = `transform 0.5s`
         }
         panel.current.style.transform = `unset`
-        setTrackMouse(0)
+        setTrackPosition(0)
         setPosition(0)
         setLastPosition(0)
     }, [panel])
@@ -123,9 +123,9 @@ export const PanelComponent = ({
     }
 
     const limiter = (value: number, overflow: number, isWheel: boolean = false) => {
-        let diff = (!isWheel ? trackMouse : 0) - value + lastPosition
-        if (Math.abs(diff) > overflow + 40) {
-            diff = overflow + 40
+        let diff = (!isWheel ? trackPosition : 0) - value + lastPosition
+        if (Math.abs(diff) > overflow + SPACE) {
+            diff = overflow + SPACE
         } else if (diff < 0) {
             diff = 0
         }
@@ -142,14 +142,14 @@ export const PanelComponent = ({
     const handleMouseDown = (e: MouseEvent) => {
         const {clientX, clientY} = e
         e.nativeEvent.stopImmediatePropagation()
-        setTrackMouse(isBottom ? clientX : clientY)
+        setTrackPosition(isBottom ? clientX : clientY)
         setDrag(true)
     }
 
     const handleTouchstart = (e: TouchEvent) => {
         const {touches} = e
         e.nativeEvent.stopImmediatePropagation()
-        setTrackMouse(isBottom ? touches[0].clientX : touches[0].clientY)
+        setTrackPosition(isBottom ? touches[0].clientX : touches[0].clientY)
         setDrag(true)
     }
 
@@ -180,7 +180,7 @@ export const PanelComponent = ({
             return
         }
 
-        const value = deltaY > 0 ? 80 : -80
+        const value = deltaY > 0 ? -80 : 80
         const diff = limiter(value, overflow, true)
         setPosition(diff)
         changePosition()

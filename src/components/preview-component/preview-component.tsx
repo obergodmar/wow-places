@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useSettings } from '../../hooks'
 import { Plug } from '../../assets'
@@ -33,10 +33,10 @@ export const PreviewComponent = ({name = '', src, value, handleChange, isLoading
         }
     }, [image])
 
-    const handleClick = (e: React.MouseEvent) => {
+    const handleClick = useCallback((e: React.MouseEvent) => {
         e.preventDefault()
         handleChange(value)
-    }
+    }, [handleChange, value])
 
     return (
             <div

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { FocusEvent, KeyboardEvent, useRef, useState } from 'react'
+import { FocusEvent, KeyboardEvent, useCallback, useRef, useState } from 'react'
 
 import './select-component.scss'
 
@@ -14,7 +14,7 @@ export const SelectComponent = ({children, options, current, handleChange}: Prop
     const [isSelectShown, setSelectShown] = useState(false)
     const dropDownRef = useRef<HTMLDivElement>(null)
 
-    const handleSelectClick = () => setSelectShown(!isSelectShown)
+    const handleSelectClick = useCallback(() => setSelectShown(!isSelectShown), [isSelectShown])
 
     const handleBlur = (e: FocusEvent) => {
         if (!dropDownRef || !dropDownRef.current) {
@@ -52,7 +52,7 @@ export const SelectComponent = ({children, options, current, handleChange}: Prop
                     className={`select ${isSelectShown ? 'select--opened' : ''}`}
             >
                 {children}
-                <div className='select-arrow'/>
+                <div className='select-arrow' />
                 {isSelectShown && (
                         <div
                                 ref={dropDownRef}

@@ -16,6 +16,9 @@ export const RangeComponent = ({handleChange, defaultValue}: Props) => {
 
     const stick = useRef<HTMLDivElement>(null)
 
+    const handleFocus = useCallback(() => setPressed(true), [])
+    const handleFree = useCallback(() => setPressed(false), [])
+
     const handleKeyDown = (e: KeyboardEvent) => {
         if (!stick || !stick.current || !stick.current.parentNode) {
             return
@@ -23,43 +26,57 @@ export const RangeComponent = ({handleChange, defaultValue}: Props) => {
         const {width} = (stick.current.parentNode as HTMLDivElement).getBoundingClientRect()
         switch (e.keyCode) {
             case 37:
-                if (position - 5 < 0) {
-                    return
-                }
-                setPosition(position - 5)
-                handleChange(position / MAX)
+                const minusValue = position - 5
+                const minusDiff = limiter(minusValue, width)
+
+                setPosition(minusDiff)
+                handleChange(minusDiff / MAX)
                 break
             case 39:
-                if (position + 5 > width - 35) {
-                    return
-                }
-                setPosition(position + 5)
-                handleChange(position / MAX)
+                const plusValue = position + 5
+                const plusDiff = limiter(plusValue, width)
+
+                setPosition(plusDiff)
+                handleChange(plusDiff / MAX)
                 break
         }
     }
 
-    const handleMouseDown = useCallback(() => {
-        setPressed(true)
-    }, [])
-
-    const handleMouseUp = useCallback(() => {
-        setPressed(false)
-    }, [])
-
-    const handleMouseMove = useCallback((e: MouseEvent) => {
-        if (!isPressed) {
-            return
-        }
+    const handlePoint = useCallback((e: React.MouseEvent | MouseEvent) => {
         if (!stick || !stick.current || !stick.current.parentNode) {
             return
         }
         const {width, left} = (stick.current.parentNode as HTMLDivElement).getBoundingClientRect()
         const {clientX} = e
-        const diff = clientX - left - 20
-        if (diff > width - 35 || diff < 0) {
+        const value = clientX - left - 20
+        const diff = limiter(value, width)
+
+        setPosition(diff)
+        handleChange(diff / MAX)
+    }, [stick, handleChange])
+
+    const handleMouseMove = useCallback((e: MouseEvent) => {
+        if (!isPressed) {
             return
         }
+        handlePoint(e)
+    }, [isPressed, handlePoint])
+
+    const handleTouchMove = useCallback((e: TouchEvent) => {
+        if (!isPressed) {
+            return
+        }
+        const {touches} = e
+        const {clientX} = touches[0]
+
+        if (!stick || !stick.current || !stick.current.parentNode) {
+            return
+        }
+        const {width, left} = (stick.current.parentNode as HTMLDivElement).getBoundingClientRect()
+
+        const value = clientX - left - 20
+        const diff = limiter(value, width)
+
         setPosition(diff)
         handleChange(diff / MAX)
     }, [isPressed, stick, handleChange])
@@ -73,27 +90,42 @@ export const RangeComponent = ({handleChange, defaultValue}: Props) => {
         range.focus()
         const {deltaY} = e
         const value = position + (deltaY > 0 ? -5 : 5)
-        if (value > width - 35 || value < 0) {
-            return
+        const diff = limiter(value, width)
+
+        setPosition(diff)
+        handleChange(diff / MAX)
+    }
+
+    const limiter = (value: number, width: number) => {
+        let diff = value
+        if (diff > width - 35) {
+            diff = MAX
+        } else if (diff < 0) {
+            diff = 0
         }
-        setPosition(value)
-        handleChange(value / MAX)
+        return diff
     }
 
     useEffect(() => {
         window.addEventListener('mousemove', handleMouseMove)
-        window.addEventListener('mouseup', handleMouseUp)
+        window.addEventListener('mouseup', handleFree)
+        window.addEventListener('touchmove', handleTouchMove)
+        window.addEventListener('touchend', handleFree)
         return () => {
             window.removeEventListener('mousemove', handleMouseMove)
-            window.removeEventListener('mouseup', handleMouseUp)
+            window.removeEventListener('mouseup', handleFree)
+            window.removeEventListener('touchmove', handleTouchMove)
+            window.removeEventListener('touchend', handleFree)
         }
-    }, [handleMouseMove, handleMouseUp])
+    }, [handleMouseMove, handleTouchMove, handleFree])
 
     return (
             <div
                     tabIndex={0}
                     onKeyDown={handleKeyDown}
-                    onMouseDown={handleMouseDown}
+                    onMouseDown={handleFocus}
+                    onClick={handlePoint}
+                    onTouchStart={handleFocus}
                     onWheel={handleScroll}
                     className='range'
             >

@@ -38,13 +38,15 @@ body {
 
 .author {
   padding: 0 10px;
-  width: 130px;
+  width: 0;
+  opacity: 0;
   font-family: $font;
   text-shadow: $fontShadow;
   color: $fontColor;
   font-size: 16px;
   display: flex;
   align-items: center;
+  transition: width $transitionDuration $transitionType, opacity $transitionDuration $transitionType;
   justify-content: space-between;
 
   a {
