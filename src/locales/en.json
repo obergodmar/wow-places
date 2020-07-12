@@ -8,5 +8,9 @@
   "ui.language": "English",
   "ui.musicVolume": "Music",
   "place.stormwind-park": "Stormwind Park",
-  "place.halls-of-valor": "Halls Of Valor"
+  "place.halls-of-valor": "Halls Of Valor",
+  "place.pandaria": "Pandaria",
+  "place.dalaran": "Dalaran",
+  "place.crystalsong-forest": "Crystalsong forest",
+  "place.nagrand": "Nagrand"
 }
