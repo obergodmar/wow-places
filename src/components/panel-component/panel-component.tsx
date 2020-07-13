@@ -96,7 +96,7 @@ export const PanelComponent = ({
         }
     }, [isShown, resetPanel])
 
-    const handleDragScroll = (e: MouseEvent) => {
+    const handleMouseMove = (e: MouseEvent) => {
         if (!isDrag) {
             return
         }
@@ -194,7 +194,7 @@ export const PanelComponent = ({
                     onTouchMove={handleTouchMove}
                     onTouchEnd={handleFree}
                     onMouseUp={handleFree}
-                    onMouseMove={handleDragScroll}
+                    onMouseMove={handleMouseMove}
                     onMouseLeave={handleFree}
                     onWheel={handleScroll}
                     onBlur={handleFree}

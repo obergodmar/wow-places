@@ -148,7 +148,7 @@ export default function App() {
                 <MainMenuComponent>
                     <div className='author'>
                         <a href="https://github.com/obergodmar">obergodmar</a>
-                        <span>v1.3.0</span>
+                        <span>v1.3.1</span>
                     </div>
                     <MenuItemComponent
                             isActive={isSettingsShown}

@@ -82,8 +82,8 @@ export const ViewComponent = ({src}: Props) => {
     const limiter = (value: Position, width: number, height: number) => {
         const {x: xValue, y: yValue} = value
 
-        let x = trackPosition.x - xValue + lastPosition.x
-        let y = trackPosition.y - yValue + lastPosition.y
+        let x = lastPosition.x - trackPosition.x + xValue
+        let y = lastPosition.y - trackPosition.y + yValue
 
         if (x > 0) {
             x = 0
@@ -121,7 +121,7 @@ export const ViewComponent = ({src}: Props) => {
         setLastPosition(position)
     }
 
-    const handleDragScroll = (e: MouseEvent) => {
+    const handleMouseMove = (e: MouseEvent) => {
         if (!isDrag) {
             return
         }
@@ -142,7 +142,7 @@ export const ViewComponent = ({src}: Props) => {
                         backgroundPosition: `${position.x}px ${position.y}px`
                     }}
                     onMouseDown={handleMouseDown}
-                    onMouseMove={handleDragScroll}
+                    onMouseMove={handleMouseMove}
                     onMouseUp={handleFree}
                     onTouchMove={handleTouchMove}
                     onTouchStart={handleTouchstart}
