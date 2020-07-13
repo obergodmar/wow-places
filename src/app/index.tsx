@@ -69,13 +69,14 @@ export default function App() {
         })
     }, [isLoading])
 
-    const handleLeftPreviewClick = useCallback((value: number) =>
-                    delayedChange(setActivePlace, value),
-            [delayedChange])
+    const handleLeftPreviewClick = useCallback((value: number) => {
+        delayedChange(setActivePlace, value)
+        setActiveView(0)
+    }, [delayedChange])
 
-    const handleBottomPreviewClick = useCallback((value: number) =>
-                    delayedChange(setActiveView, value),
-            [delayedChange])
+    const handleBottomPreviewClick = useCallback((value: number) => {
+        delayedChange(setActiveView, value)
+    }, [delayedChange])
 
     useEffect(() => {
         if (app && app.current) {
@@ -85,7 +86,6 @@ export default function App() {
 
     useLayoutEffect(() => {
         document.title = language[`place.${places[activePlace].name}` as keyof typeof language]
-        setActiveView(0)
     }, [activePlace, language])
 
     useEffect(() => {
