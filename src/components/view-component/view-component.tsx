@@ -139,7 +139,8 @@ export const ViewComponent = ({src}: Props) => {
                     className='view'
                     style={{
                         backgroundImage: `url(${imageSrc})`,
-                        backgroundPosition: `${position.x}px ${position.y}px`
+                        backgroundPosition: `${position.x}px ${position.y}px`,
+                        backgroundSize: 'cover'
                     }}
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
