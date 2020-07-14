@@ -27,18 +27,20 @@ export const ViewComponent = ({src}: Props) => {
     const [trackPosition, setTrackPosition] = useState(initialPosition)
     const [position, setPosition] = useState(initialPosition)
     const [lastPosition, setLastPosition] = useState(initialPosition)
+    const [isBigScreen, setBigScreen] = useState(false)
 
     const handleResize = useCallback(() => {
         const {innerWidth, innerHeight} = window
 
-        let width = (innerWidth - DEFAULT_WIDTH) / 2
-        let height = (innerHeight - DEFAULT_HEIGHT) / 2
+        let width = 0
+        let height = 0
+        setBigScreen(false)
 
-        if (innerWidth >= DEFAULT_WIDTH) {
-            width = 0
-        }
-        if (innerHeight >= DEFAULT_HEIGHT) {
-            height = 0
+        if (innerHeight < DEFAULT_HEIGHT && innerWidth < DEFAULT_WIDTH) {
+            width = (innerWidth - DEFAULT_WIDTH) / 2
+            height = (innerHeight - DEFAULT_HEIGHT) / 2
+        } else {
+            setBigScreen(true)
         }
         setPosition({x: width, y: height})
         setLastPosition({x: width, y: height})
@@ -69,6 +71,9 @@ export const ViewComponent = ({src}: Props) => {
 
     const handleTouchMove = (e: TouchEvent) => {
         const {touches} = e
+        if (isBigScreen) {
+            return
+        }
         const {innerWidth, innerHeight} = window
         const width = DEFAULT_WIDTH - innerWidth
         const height = DEFAULT_HEIGHT - innerHeight
@@ -125,6 +130,9 @@ export const ViewComponent = ({src}: Props) => {
         if (!isDrag) {
             return
         }
+        if (isBigScreen) {
+            return
+        }
         const {innerWidth, innerHeight} = window
         const width = DEFAULT_WIDTH - innerWidth
         const height = DEFAULT_HEIGHT - innerHeight
@@ -140,7 +148,7 @@ export const ViewComponent = ({src}: Props) => {
                     style={{
                         backgroundImage: `url(${imageSrc})`,
                         backgroundPosition: `${position.x}px ${position.y}px`,
-                        backgroundSize: 'cover'
+                        backgroundSize: `${isBigScreen ? 'cover' : 'auto'}`
                     }}
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
