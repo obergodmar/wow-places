@@ -10,6 +10,7 @@ import {
     useState,
     WheelEvent
 } from 'react'
+import cn from 'classnames'
 
 import { ANIMATION_DURATION, debounce, PREVIEW_HEIGHT, PREVIEW_WIDTH, SPACE } from '../../utils'
 import { useSettings } from '../../hooks'
@@ -198,7 +199,7 @@ export const PanelComponent = ({
                     onMouseLeave={handleFree}
                     onWheel={handleScroll}
                     onBlur={handleFree}
-                    className={`panel panel--${orientation} ${isShown ? `panel--${orientation}--shown` : ''}`}
+                    className={cn('panel', `panel--${orientation}`, {[`panel--${orientation}--shown`]: isShown})}
             >
                 <div
                         ref={panel}

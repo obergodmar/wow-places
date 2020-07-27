@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { KeyboardEvent, useCallback } from 'react'
+import cn from 'classnames'
 
 import './checkbox-component.scss'
 
@@ -23,7 +24,7 @@ export const CheckBoxComponent = ({handleClick, optionName, value}: Props) => {
                     tabIndex={0}
                     onClick={() => handleClick(optionName)}
                     onKeyDown={(e) => handleKeyDown(e, optionName)}
-                    className={`checkbox ${value ? 'checkbox--checked' : ''}`}
+                    className={cn('checkbox', {'checkbox--checked': value})}
             />
     )
 }

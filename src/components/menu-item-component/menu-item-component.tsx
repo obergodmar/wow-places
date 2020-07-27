@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { KeyboardEvent, useCallback } from 'react'
+import cn from 'classnames'
 
 import './menu-item-component.scss'
 
@@ -22,7 +23,7 @@ export const MenuItemComponent = ({isActive, handleClick}: Props) => {
                     tabIndex={0}
                     onClick={handleClick}
                     onKeyDown={handleKeyDown}
-                    className={`menu-item ${isActive ? 'menu-item--active' : ''}`}
+                    className={cn('menu-item', {'menu-item--active': isActive})}
             />
     )
 }
