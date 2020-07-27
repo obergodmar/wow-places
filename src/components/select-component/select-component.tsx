@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { FocusEvent, KeyboardEvent, useCallback, useRef, useState } from 'react'
+import cn from 'classnames'
 
 import './select-component.scss'
 
@@ -49,7 +50,9 @@ export const SelectComponent = ({children, options, current, handleChange}: Prop
                     onKeyDown={handleKeyDown}
                     onBlur={handleBlur}
                     tabIndex={0}
-                    className={`select ${isSelectShown ? 'select--opened' : ''}`}
+                    className={cn('select', {
+                        'select--opened': isSelectShown
+                    })}
             >
                 {children}
                 <div className='select-arrow' />
@@ -64,12 +67,9 @@ export const SelectComponent = ({children, options, current, handleChange}: Prop
                                             tabIndex={0}
                                             onClick={() => onItemClick(item)}
                                             onKeyDown={(e) => onItemKeyDown(e, item)}
-                                            className={`select-item ${item === current
-                                                    ?
-                                                    'select-item--selected'
-                                                    :
-                                                    ''}`
-                                            }
+                                            className={cn('select-item', {
+                                                'select-item--selected': item === current
+                                            })}
                                     >
                                         {item}
                                     </div>

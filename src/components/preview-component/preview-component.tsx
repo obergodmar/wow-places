@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import cn from 'classnames'
 
 import { useSettings } from '../../hooks'
 import { Plug } from '../../assets'
@@ -46,13 +47,10 @@ export const PreviewComponent = ({name = '', src, value, handleChange, isLoading
                         margin: `${name ? '10px 5px' : '5px'}`,
                         backgroundImage: `url(${isLoaded ? image.src : Plug})`
                     }}
-                    className={
-                        `preview ${!isLoaded
-                                ? 'preview--not-loaded' :
-                                ''} ${isLoading
-                                ? 'preview--loading'
-                                : ''}`
-                    }
+                    className={cn('preview', {
+                        'preview--not-loaded': !isLoaded,
+                        'preview--loading': isLoading
+                    })}
             >
                 {name && (
                         <div className='preview-name'>

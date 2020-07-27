@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { FocusEvent, MouseEvent, TouchEvent, useCallback, useEffect, useState } from 'react'
+import cn from 'classnames'
 
 import { Background } from '../../assets'
 import { ANIMATION_DURATION, DEFAULT_HEIGHT, DEFAULT_WIDTH } from '../../utils'
@@ -159,7 +160,10 @@ export const ViewComponent = ({src}: Props) => {
                     onMouseLeave={handleFree}
                     onBlur={handleFree}
             >
-                <div className={`view-background ${isLoaded ? 'view-background--loaded' : ''}`} />
+                <div className={cn('view-background', {
+                    'view-background--loaded': isLoaded
+                })}
+                />
             </div>
     )
 }
