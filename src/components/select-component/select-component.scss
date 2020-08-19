@@ -10,119 +10,125 @@ $DropDownBorder: 10px;
 $dropDownOutset: $DropDownBorder / 2;
 
 .select {
-  color: $fontColorWhite;
-  display: flex;
-  position: relative;
-  padding-left: 6px;
-  justify-content: space-between;
-  border-radius: 8px;
-  align-items: center;
-  width: $selectWidth;
-  height: $selectHeight;
-  background-image: $selectBorder;
-  background-repeat: no-repeat;
-  background-size: $selectBackgroundWidth $selectBackgroundHeight;
-  background-position: center top;
-
-  &::before {
-    z-index: -1;
-    content: '';
-    position: absolute;
-    top: 4px;
-    left: 2px;
-    width: 75px;
-    height: 18px;
-    background-image: $panelBackground;
-    background-repeat: repeat;
-  }
-
-  &:active:not(.select--opened) {
-    .select-arrow {
-      background-image: $selectArrowClick;
-    }
-  }
-
-  &:focus {
-    outline: none;
-    box-shadow: inset $hoverBox;
-  }
-
-  &-arrow {
-    width: 32px;
-    height: 32px;
-    background-image: $selectArrow;
-  }
-
-  &-drop-down {
-    z-index: 7;
-    position: absolute;
+    position: relative;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    width: $selectWidth + 10px;
-    top: $selectHeight + 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border: $dropDownOutset double $fontColor;
-    border-image: $border 13 13 13 13;
-    border-image-width: $DropDownBorder;
-    border-image-outset: $dropDownOutset;
-    border-image-repeat: stretch stretch;
-    background-color: $settingsBackground;
-
-    &:focus {
-      outline: none;
-    }
-  }
-
-  &-item {
-    width: 100%;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 20px;
-
-    &:hover {
-      background: linear-gradient(90deg,
-              rgba(173, 154, 32, 0.1) 0%,
-              rgba(173, 154, 32, 0.5) 25%,
-              rgba(173, 154, 32, 0.5) 75%,
-              rgba(173, 154, 32, 0.1) 100%);
-    }
-
-    &:active {
-      align-items: flex-end;
-    }
-
-    &:focus {
-      outline: none;
-      background: linear-gradient(90deg,
-              rgba(173, 154, 32, 0.1) 0%,
-              rgba(173, 154, 32, 0.5) 25%,
-              rgba(173, 154, 32, 0.5) 75%,
-              rgba(173, 154, 32, 0.1) 100%);
-    }
+    width: $selectWidth;
+    height: $selectHeight;
+    padding-left: 6px;
+    color: $fontColorWhite;
+    background-image: $selectBorder;
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: $selectBackgroundWidth $selectBackgroundHeight;
+    border-radius: 8px;
 
     &::before {
-      content: '';
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      background: $radio;
-      left: 0;
+        position: absolute;
+        top: 4px;
+        left: 2px;
+        z-index: -1;
+        width: 75px;
+        height: 18px;
+        background-image: $panelBackground;
+        background-repeat: repeat;
+        content: "";
     }
 
-    &--selected {
-      &::before {
-        content: '';
-        position: absolute;
-        width: 16px;
-        height: 16px;
-        background: $radio 48px, $radio;
-        left: 0;
-      }
+    &:active:not(.select--opened) {
+        .select-arrow {
+            background-image: $selectArrowClick;
+        }
     }
-  }
+
+    &:focus {
+        outline: none;
+        box-shadow: inset $hoverBox;
+    }
+
+    &-arrow {
+        width: 32px;
+        height: 32px;
+        background-image: $selectArrow;
+    }
+
+    &-drop-down {
+        position: absolute;
+        top: $selectHeight + 10px;
+        left: 50%;
+        z-index: 7;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        width: $selectWidth + 10px;
+        background-color: $settingsBackground;
+        border: $dropDownOutset double $fontColor;
+        border-image: $border 13 13 13 13;
+        border-image-width: $DropDownBorder;
+        border-image-outset: $dropDownOutset;
+        border-image-repeat: stretch stretch;
+        transform: translateX(-50%);
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    &-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 20px;
+        text-align: center;
+
+        &:hover {
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(173, 154, 32, .1) 0%,
+                    rgba(173, 154, 32, .5) 25%,
+                    rgba(173, 154, 32, .5) 75%,
+                    rgba(173, 154, 32, .1) 100%
+                );
+        }
+
+        &:active {
+            align-items: flex-end;
+        }
+
+        &:focus {
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(173, 154, 32, .1) 0%,
+                    rgba(173, 154, 32, .5) 25%,
+                    rgba(173, 154, 32, .5) 75%,
+                    rgba(173, 154, 32, .1) 100%
+                );
+            outline: none;
+        }
+
+        &::before {
+            position: absolute;
+            left: 0;
+            width: 16px;
+            height: 16px;
+            background: $radio;
+            content: "";
+        }
+
+        &--selected {
+            &::before {
+                position: absolute;
+                left: 0;
+                width: 16px;
+                height: 16px;
+                background: $radio 48px, $radio;
+                content: "";
+            }
+        }
+    }
 }

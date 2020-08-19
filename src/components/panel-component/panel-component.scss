@@ -5,73 +5,73 @@ $panelHeight: $previewHeight + 40px;
 $panelBorderSize: 8px;
 
 .panel {
-  z-index: 2;
-  padding: 20px;
-  border: none;
-  position: absolute;
-  height: $panelHeight;
-  width: $panelWidth;
-  background-image: $panelBackground;
-  background-repeat: repeat;
-
-  &-content {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-  }
-
-  button {
-    z-index: 3;
     position: absolute;
-  }
+    z-index: 2;
+    width: $panelWidth;
+    height: $panelHeight;
+    padding: 20px;
+    background-image: $panelBackground;
+    background-repeat: repeat;
+    border: none;
 
-  &--bottom {
-    bottom: -$panelHeight + $panelBorderSize;
-    width: 100%;
-    transition: bottom $transitionDuration $transitionType;
-    border-top: $panelBorderSize double $fontColor;
-    border-image: $borderTop 16 32 16 32;
-    border-image-outset: $panelBorderSize - 2px 0 0 0;
-    border-image-width: $panelBorderSize * 2 0 0 100%;
-    border-image-repeat: round round;
-
-    .panel-content {
-      height: 100%;
+    &-content {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
     }
 
     button {
-      left: 50%;
-      transform: translateX(-50%);
-      top: -$buttonHeight - 5px;
+        position: absolute;
+        z-index: 3;
     }
 
-    &--shown {
-      bottom: 0;
-    }
-  }
+    &--bottom {
+        bottom: -$panelHeight + $panelBorderSize;
+        width: 100%;
+        border-top: $panelBorderSize double $fontColor;
+        border-image: $borderTop 16 32 16 32;
+        border-image-width: $panelBorderSize * 2 0 0 100%;
+        border-image-outset: $panelBorderSize - 2px 0 0 0;
+        border-image-repeat: round round;
+        transition: bottom $transitionDuration $transitionType;
 
-  &--left {
-    left: -$panelWidth + $panelBorderSize;
-    height: 100%;
-    border-right: $panelBorderSize double $fontColor;
-    border-image: $borderRight 32 16 0 0;
-    border-image-outset: 0 $panelBorderSize - 2px 0 0;
-    border-image-width: 100% $panelBorderSize*2 0 0;
-    transition: left $transitionDuration $transitionType;
+        .panel-content {
+            height: 100%;
+        }
 
-    .panel-content {
-      flex-direction: column;
-      width: 100%;
+        button {
+            top: -$buttonHeight - 5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        &--shown {
+            bottom: 0;
+        }
     }
 
-    button {
-      top: 50%;
-      transform: translateY(-50%) rotate(90deg);
-      right: -80px;
-    }
+    &--left {
+        left: -$panelWidth + $panelBorderSize;
+        height: 100%;
+        border-right: $panelBorderSize double $fontColor;
+        border-image: $borderRight 32 16 0 0;
+        border-image-width: 100% $panelBorderSize*2 0 0;
+        border-image-outset: 0 $panelBorderSize - 2px 0 0;
+        transition: left $transitionDuration $transitionType;
 
-    &--shown {
-      left: 0;
+        .panel-content {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        button {
+            top: 50%;
+            right: -80px;
+            transform: translateY(-50%) rotate(90deg);
+        }
+
+        &--shown {
+            left: 0;
+        }
     }
-  }
 }

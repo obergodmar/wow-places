@@ -1,10 +1,10 @@
-import preview from './preview'
-import view from './view'
-import music from './music'
+import preview from "./preview";
+import view from "./view";
+import music from "./music";
 
 export default {
-	name: 'dalaran',
-	music,
-	view,
-	preview
-}
+  name: "dalaran",
+  music,
+  view,
+  preview,
+};

@@ -1,17 +1,17 @@
 @import "../assets/assets";
 
-$hoverColor: rgba(173, 154, 32, 0.75);
+$hoverColor: rgba(173, 154, 32, .75);
 $hoverBox: 0 0 4px 2px $hoverColor;
 $previewHeight: 180px;
 $previewWidth: 320px;
-$font: 'Arial Narrow';
+$font: "Arial Narrow";
 $fontSpacing: 1.2px;
 $fontSize: 14px;
 //$fontShadow: 2px 2px 2px #000;
 $fontShadow: -1px -1px 1px #000,
-1px -1px 1px #000,
--1px 1px 1px #000,
-1px 1px 1px #000;
+    1px -1px 1px #000,
+    -1px 1px 1px #000,
+    1px 1px 1px #000;
 $buttonSmallWidth: 78px;
 $buttonSmallHeight: 21px;
 $buttonWidth: 125px;
@@ -20,77 +20,77 @@ $fontColor: #eec511;
 $fontColorWhite: #fff;
 $transitionDuration: 500ms;
 $transitionType: cubic-bezier(1, .35, .57, 1);
-$settingsBackground: rgba(0, 0, 0, 0.6);
+$settingsBackground: rgba(0, 0, 0, .6);
 
 body {
-  cursor: $cursor, auto;
-  background-image: $backgroundTexture;
-  background-repeat: repeat;
-  overflow: hidden;
+    overflow: hidden;
+    background-image: $backgroundTexture;
+    background-repeat: repeat;
+    cursor: $cursor, auto;
 }
 
 .main {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  position: relative;
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .author {
-  padding: 0 10px;
-  width: 0;
-  opacity: 0;
-  font-family: $font;
-  text-shadow: $fontShadow;
-  color: $fontColor;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  transition: width $transitionDuration $transitionType, opacity $transitionDuration $transitionType;
-  justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 0;
+    padding: 0 10px;
+    color: $fontColor;
+    font-size: 16px;
+    font-family: $font;
+    text-shadow: $fontShadow;
+    opacity: 0;
+    transition: width $transitionDuration $transitionType, opacity $transitionDuration $transitionType;
 
-  a {
-    cursor: $cursorPointer, auto;
-    color: inherit;
-    text-decoration: none;
+    a {
+        color: inherit;
+        text-decoration: none;
+        cursor: $cursorPointer, auto;
 
-    &:focus {
-      outline: none;
-      box-shadow: $hoverBox;
+        &:focus {
+            outline: none;
+            box-shadow: $hoverBox;
+        }
     }
-  }
 }
 
 button {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  font-family: $font;
-  font-size: $fontSize;
-  text-shadow: $fontShadow;
-  letter-spacing: $fontSpacing;
-  color: $fontColor;
-  cursor: $cursor, auto;
-  width: $buttonWidth;
-  height: $buttonHeight;
-  border: none;
-  border-radius: 6px;
-  background-color: unset;
-  background-image: $buttonUp;
-  background-position: -2px -2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: $buttonWidth;
+    height: $buttonHeight;
+    color: $fontColor;
+    font-size: $fontSize;
+    font-family: $font;
+    letter-spacing: $fontSpacing;
+    text-shadow: $fontShadow;
+    background-color: unset;
+    background-image: $buttonUp;
+    background-position: -2px -2px;
+    border: none;
+    border-radius: 6px;
+    cursor: $cursor, auto;
 
-  &:hover {
-    background-image: $buttonHover, $buttonUp;
-  }
+    &:hover {
+        background-image: $buttonHover, $buttonUp;
+    }
 
-  &:focus {
-    outline: none;
-    box-shadow: $hoverBox;
-  }
+    &:focus {
+        outline: none;
+        box-shadow: $hoverBox;
+    }
 
-  &:active {
-    justify-content: center;
-    background-image: $buttonDown;
-  }
+    &:active {
+        justify-content: center;
+        background-image: $buttonDown;
+    }
 }

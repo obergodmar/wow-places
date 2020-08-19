@@ -9,51 +9,51 @@ $settingsHeaderWidth: 132px;
 $settingsHeaderHeight: 25px;
 
 .settings {
-  z-index: 5;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  border: $settingsBorderWidth double $fontColor;
-  border-image: $border 15 15 15 15 fill;
-  border-image-outset: $settingsBorderOutset;
-  border-image-repeat: stretch stretch;
-  font-family: $font;
-  font-size: $fontSize;
-  text-shadow: $fontShadow;
-  letter-spacing: $fontSpacing;
-  width: $settingsWidth;
-  height: $settingsHeight;
-  background-color: $settingsBackground;
-
-  &-header {
-    z-index: 6;
     position: absolute;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    top: -$settingsHeaderHeight;
-    width: $settingsHeaderWidth;
-    height: $settingsHeaderHeight;
-  }
+    z-index: 5;
+    width: $settingsWidth;
+    height: $settingsHeight;
+    font-size: $fontSize;
+    font-family: $font;
+    letter-spacing: $fontSpacing;
+    text-shadow: $fontShadow;
+    background-color: $settingsBackground;
+    border: $settingsBorderWidth double $fontColor;
+    border-image: $border 15 15 15 15 fill;
+    border-image-outset: $settingsBorderOutset;
+    border-image-repeat: stretch stretch;
+    transform: translate(-50%, -50%);
 
-  &-content {
-    color: $fontColor;
-    margin-top: 10px;
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-gap: 15px;
-  }
+    &-header {
+        position: absolute;
+        top: -$settingsHeaderHeight;
+        left: 50%;
+        z-index: 6;
+        width: $settingsHeaderWidth;
+        height: $settingsHeaderHeight;
+        transform: translateX(-50%);
+    }
 
-  &-option {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+    &-content {
+        display: grid;
+        grid-gap: 15px;
+        grid-template-rows: 1fr;
+        margin-top: 10px;
+        color: $fontColor;
+    }
 
-  .settings-button {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-  }
+    &-option {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .settings-button {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }

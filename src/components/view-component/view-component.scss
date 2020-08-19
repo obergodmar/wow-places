@@ -1,36 +1,36 @@
 @import "../../app/style";
 
 .view {
-  z-index: 1;
-  position: absolute;
-  top: 0;
-  left: 0;
-  min-width: 100vw;
-  min-height: 100vh;
-  background-repeat: no-repeat;
-  animation: pulse 10s infinite;
-  animation-direction: alternate;
-
-  &-background {
-    z-index: 2;
-    opacity: 1;
     position: absolute;
-    min-width: inherit;
-    min-height: inherit;
-    background: $backgroundTexture;
-    transition: opacity $transitionDuration $transitionType;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    min-width: 100vw;
+    min-height: 100vh;
+    background-repeat: no-repeat;
+    animation: pulse 10s infinite;
+    animation-direction: alternate;
 
-    &--loaded {
-      opacity: 0;
+    &-background {
+        position: absolute;
+        z-index: 2;
+        min-width: inherit;
+        min-height: inherit;
+        background: $backgroundTexture;
+        opacity: 1;
+        transition: opacity $transitionDuration $transitionType;
+
+        &--loaded {
+            opacity: 0;
+        }
     }
-  }
 }
 
 @keyframes pulse {
-  0% {
-    transform: scale(1.02);
-  }
-  100% {
-    transform: scale(1);
-  }
+    0% {
+        transform: scale(1.02);
+    }
+    100% {
+        transform: scale(1);
+    }
 }

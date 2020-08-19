@@ -7,46 +7,46 @@ $previewNameWidth: 250px;
 $previewNameHeight: 25px;
 
 .preview {
-  z-index: 4;
-  position: relative;
-  cursor: $cursorInteract, auto;
-  min-width: $previewWidth;
-  min-height: $previewHeight;
-  margin: 5px;
-  border: $previewBorderWidth double $fontColor;
-  border-image: $border 12 12 11 12;
-  border-image-outset: $previewBorderWidth / 2;
-  border-image-repeat: stretch stretch;
-  background-position: center;
-  background-size: $previewWidth $previewHeight;
-  background-repeat: no-repeat;
-  opacity: 1;
-  transition: opacity $transitionDuration $transitionType;
+    position: relative;
+    z-index: 4;
+    min-width: $previewWidth;
+    min-height: $previewHeight;
+    margin: 5px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: $previewWidth $previewHeight;
+    border: $previewBorderWidth double $fontColor;
+    border-image: $border 12 12 11 12;
+    border-image-outset: $previewBorderWidth / 2;
+    border-image-repeat: stretch stretch;
+    cursor: $cursorInteract, auto;
+    opacity: 1;
+    transition: opacity $transitionDuration $transitionType;
 
-  &-name {
-    position: absolute;
-    width: $previewNameWidth;
-    height: $previewNameHeight;
-    bottom: -$previewNameHeight + 5px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  &--not-loaded {
-    background-size: $plugSize;
-  }
-
-  &--loading {
-    opacity: 0.4;
-  }
-
-  &:hover {
-    box-shadow: $hoverBox;
-
-    .preview-name {
-      box-shadow: -4px 4px 4px 2px $hoverColor,
-      4px 0 4px 2px $hoverColor;
+    &-name {
+        position: absolute;
+        bottom: -$previewNameHeight + 5px;
+        left: 50%;
+        width: $previewNameWidth;
+        height: $previewNameHeight;
+        transform: translateX(-50%);
     }
-  }
-}
 
+    &--not-loaded {
+        background-size: $plugSize;
+    }
+
+    &--loading {
+        opacity: .4;
+    }
+
+    &:hover {
+        box-shadow: $hoverBox;
+
+        .preview-name {
+            box-shadow:
+                -4px 4px 4px 2px $hoverColor,
+                4px 0 4px 2px $hoverColor;
+        }
+    }
+}
