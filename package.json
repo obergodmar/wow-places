@@ -64,9 +64,6 @@
       "pre-commit": "yarn eslint && yarn stylelint"
     }
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       "since 2010"
