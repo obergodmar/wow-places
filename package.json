@@ -45,7 +45,8 @@
     "stylelint-config-recommended-scss": "^4.2.0",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-scss": "^3.18.0",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.5",
+    "yarn": "^1.22.4"
   },
   "scripts": {
     "start": "serve ./build",
@@ -55,7 +56,7 @@
     "eslint:fix": "npx eslint --ext .ts,.tsx . --fix ./src",
     "stylelint": "npx stylelint \"src/**/*.scss\"",
     "stylelint:fix": "npx stylelint --fix \"src/**/*.scss\"",
-    "test": "npm run test:u && npm run test:cov",
+    "test": "yarn test:u && yarn test:cov",
     "test:u": "jest -u",
     "test:cov": "jest --coverage"
   },
