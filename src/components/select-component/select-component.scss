@@ -36,7 +36,7 @@ $dropDownOutset: $DropDownBorder / 2;
         content: "";
     }
 
-    &:active:not(.select--opened) {
+    &--opened {
         .select-arrow {
             background-image: $selectArrowClick;
         }

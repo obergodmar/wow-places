@@ -13,6 +13,8 @@ export {
   SPACE,
 } from "./constants";
 
+export { bootstrapSettings } from "./bootstrap-settings";
+
 export const delay = (): Promise<unknown> =>
   new Promise((resolve) => setTimeout(resolve, LOADING_DURATION));
 
