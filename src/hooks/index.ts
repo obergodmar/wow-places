@@ -1,1 +1,1 @@
-export { useSettings } from "./use-settings";
+export { useSettings } from './use-settings';

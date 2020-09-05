@@ -3,6 +3,7 @@
   "ui.button.views": "Виды",
   "ui.button.close": "Закрыть",
   "ui.main-menu": "Главное меню",
+  "ui.dialog.button": "Принять",
   "ui.uiSound": "Звуки интерфейса",
   "ui.uiLanguage": "Язык",
   "ui.language": "Русский",
@@ -12,5 +13,6 @@
   "place.pandaria": "Пандария",
   "place.dalaran": "Даларан",
   "place.crystalsong-forest": "Лес хрустальной песни",
-  "place.nagrand": "Награнд"
+  "place.nagrand": "Награнд",
+  "error.404": "Место не найдено"
 }

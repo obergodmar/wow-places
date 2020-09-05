@@ -3,6 +3,7 @@
   "ui.button.views": "Views",
   "ui.button.close": "Close",
   "ui.main-menu": "Main Menu",
+  "ui.dialog.button": "Okay",
   "ui.uiSound": "UI Sound",
   "ui.uiLanguage": "Language",
   "ui.language": "English",
@@ -12,5 +13,6 @@
   "place.pandaria": "Pandaria",
   "place.dalaran": "Dalaran",
   "place.crystalsong-forest": "Crystalsong forest",
-  "place.nagrand": "Nagrand"
+  "place.nagrand": "Nagrand",
+  "error.404": "Place not found"
 }

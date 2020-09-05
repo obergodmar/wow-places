@@ -1,3 +1,5 @@
+import defaultPlace from '../assets/stormwind-park';
+
 export const ANIMATION_DURATION = 500;
 export const LOADING_DURATION = 800;
 export const PREVIEW_WIDTH = 320;
@@ -7,3 +9,10 @@ export const UI_MUSIC_VOLUME = 1;
 export const SPACE = 200;
 export const DEFAULT_WIDTH = 1920;
 export const DEFAULT_HEIGHT = 1080;
+
+export const DEFAULT_PLACE = `${defaultPlace.name}/0`;
+export const PATH_PLACES = '/:placeName/:viewNumber';
+
+export const author = 'obergodmar';
+export const authorUrl = 'https://github.com/obergodmar';
+export const version = 'v1.3.1';

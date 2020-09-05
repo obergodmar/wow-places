@@ -1,232 +1,223 @@
-import * as React from "react";
+import * as React from 'react';
 import {
-  FocusEvent,
-  MouseEvent,
-  TouchEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  WheelEvent,
-} from "react";
-import cn from "classnames";
+    FocusEvent,
+    MouseEvent,
+    TouchEvent,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+    WheelEvent,
+} from 'react';
+import cn from 'classnames';
 
-import {
-  ANIMATION_DURATION,
-  debounce,
-  PREVIEW_HEIGHT,
-  PREVIEW_WIDTH,
-  SPACE,
-} from "../../utils";
-import { useSettings } from "../../hooks";
+import { ANIMATION_DURATION, debounce, PREVIEW_HEIGHT, PREVIEW_WIDTH, SPACE } from '../../utils';
+import { useSettings } from '../../hooks';
 
-import "./panel-component.scss";
+import './panel-component.scss';
 
 interface Props {
-  orientation: "bottom" | "left";
-  isShown: boolean;
-  itemsCount: number;
-  setShown: () => void;
-  openSoundPlay: (volume?: number) => void;
-  closeSoundPlay: (volume?: number) => void;
-  children: React.ReactNode;
+    orientation: 'bottom' | 'left';
+    isShown: boolean;
+    itemsCount: number;
+    setShown: () => void;
+    openSoundPlay: (volume?: number) => void;
+    closeSoundPlay: (volume?: number) => void;
+    children: React.ReactNode;
 }
 
 export const PanelComponent: React.FC<Props> = ({
-  isShown,
-  setShown,
-  children,
-  openSoundPlay,
-  closeSoundPlay,
-  itemsCount,
-  orientation,
+    isShown,
+    setShown,
+    children,
+    openSoundPlay,
+    closeSoundPlay,
+    itemsCount,
+    orientation,
 }: Props) => {
-  const {
-    settings: { language, uiSound },
-  } = useSettings();
-  const [isDrag, setDrag] = useState(false);
-  const [trackPosition, setTrackPosition] = useState(0);
-  const [position, setPosition] = useState(0);
-  const [lastPosition, setLastPosition] = useState(0);
+    const {
+        settings: { language, uiSound },
+    } = useSettings();
+    const [isDrag, setDrag] = useState(false);
+    const [trackPosition, setTrackPosition] = useState(0);
+    const [position, setPosition] = useState(0);
+    const [lastPosition, setLastPosition] = useState(0);
 
-  const panel = useRef<HTMLInputElement>(null);
-  const isBottom = useMemo(() => orientation === "bottom", [orientation]);
+    const panel = useRef<HTMLInputElement>(null);
+    const isBottom = useMemo(() => orientation === 'bottom', [orientation]);
 
-  const windowOverflow = () => {
-    const { innerWidth, innerHeight } = window;
-    const windowSize = isBottom ? innerWidth : innerHeight;
-    const containerSize =
-      itemsCount * ((isBottom ? PREVIEW_WIDTH : PREVIEW_HEIGHT) + 15);
-    if (!(containerSize > windowSize)) {
-      return 0;
-    }
-    return Math.abs(containerSize - windowSize);
-  };
-
-  const changePosition = () => {
-    if (!panel.current) {
-      return;
-    }
-    panel.current.style.transform = `translate${
-      isBottom ? "X" : "Y"
-    }(${-position}px)`;
-  };
-
-  const limiter = (value: number, overflow: number, isWheel = false) => {
-    let diff = (!isWheel ? trackPosition : 0) - value + lastPosition;
-    if (Math.abs(diff) > overflow + SPACE) {
-      diff = overflow + SPACE;
-    } else if (diff < 0) {
-      diff = 0;
-    }
-    return diff;
-  };
-
-  const handleClick = (event: MouseEvent) => {
-    event.preventDefault();
-    setShown();
-    if (!uiSound) {
-      return;
-    }
-    if (isShown) {
-      openSoundPlay();
-    } else {
-      closeSoundPlay();
-    }
-  };
-
-  const resetPanel = useCallback(
-    (animate = true) => {
-      if (!panel.current) {
-        return;
-      }
-      if (animate) {
-        panel.current.style.transition = `transform 0.5s`;
-      }
-      panel.current.style.transform = `unset`;
-      setTrackPosition(0);
-      setPosition(0);
-      setLastPosition(0);
-    },
-    [panel]
-  );
-
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    const handleResize = debounce(() => {
-      resetPanel();
-      timeout = setTimeout(() => {
-        if (!panel || !panel.current) {
-          return;
+    const windowOverflow = () => {
+        const { innerWidth, innerHeight } = window;
+        const windowSize = isBottom ? innerWidth : innerHeight;
+        const containerSize = itemsCount * ((isBottom ? PREVIEW_WIDTH : PREVIEW_HEIGHT) + 15);
+        if (!(containerSize > windowSize)) {
+            return 0;
         }
-        panel.current.style.transition = "unset";
-      }, ANIMATION_DURATION);
-    }, 100);
-    window.addEventListener("resize", handleResize);
-    return () => {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-      window.removeEventListener("resize", handleResize);
+        return Math.abs(containerSize - windowSize);
     };
-  }, [panel, resetPanel]);
 
-  useEffect(() => {
-    if (!isShown) {
-      resetPanel(false);
-    }
-  }, [isShown, resetPanel]);
+    const changePosition = () => {
+        if (!panel.current) {
+            return;
+        }
+        panel.current.style.transform = `translate${isBottom ? 'X' : 'Y'}(${-position}px)`;
+    };
 
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isDrag) {
-      return;
-    }
-    const overflow = windowOverflow();
-    if (!overflow) {
-      return;
-    }
+    const limiter = (value: number, overflow: number, isWheel = false) => {
+        let diff = (!isWheel ? trackPosition : 0) - value + lastPosition;
+        if (Math.abs(diff) > overflow + SPACE) {
+            diff = overflow + SPACE;
+        } else if (diff < 0) {
+            diff = 0;
+        }
+        return diff;
+    };
 
-    const { clientX, clientY } = e;
-    const value = isBottom ? clientX : clientY;
-    const diff = limiter(value, overflow);
-    setPosition(diff);
-    changePosition();
-  };
+    const handleClick = (event: MouseEvent) => {
+        event.preventDefault();
+        setShown();
+        if (!uiSound) {
+            return;
+        }
+        if (isShown) {
+            openSoundPlay();
+        } else {
+            closeSoundPlay();
+        }
+    };
 
-  const handleMouseDown = (e: MouseEvent) => {
-    const { clientX, clientY } = e;
-    e.nativeEvent.stopImmediatePropagation();
-    setTrackPosition(isBottom ? clientX : clientY);
-    setDrag(true);
-  };
+    const resetPanel = useCallback(
+        (animate = true) => {
+            if (!panel.current) {
+                return;
+            }
+            if (animate) {
+                panel.current.style.transition = `transform 0.5s`;
+            }
+            panel.current.style.transform = `unset`;
+            setTrackPosition(0);
+            setPosition(0);
+            setLastPosition(0);
+        },
+        [panel],
+    );
 
-  const handleTouchstart = (e: TouchEvent) => {
-    const { touches } = e;
-    e.nativeEvent.stopImmediatePropagation();
-    setTrackPosition(isBottom ? touches[0].clientX : touches[0].clientY);
-    setDrag(true);
-  };
+    useEffect(() => {
+        let timeout: NodeJS.Timeout;
+        const handleResize = debounce(() => {
+            resetPanel();
+            timeout = setTimeout(() => {
+                if (!panel || !panel.current) {
+                    return;
+                }
+                panel.current.style.transition = 'unset';
+            }, ANIMATION_DURATION);
+        }, 100);
+        window.addEventListener('resize', handleResize);
+        return () => {
+            if (timeout) {
+                clearTimeout(timeout);
+            }
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [panel, resetPanel]);
 
-  const handleTouchMove = (e: TouchEvent) => {
-    const { touches } = e;
-    const { clientX, clientY } = touches[0];
-    const overflow = windowOverflow();
-    if (!overflow) {
-      return;
-    }
+    useEffect(() => {
+        if (!isShown) {
+            resetPanel(false);
+        }
+    }, [isShown, resetPanel]);
 
-    const value = isBottom ? clientX : clientY;
-    const diff = limiter(value, overflow);
-    setPosition(diff);
-    changePosition();
-  };
+    const handleMouseMove = (e: MouseEvent) => {
+        if (!isDrag) {
+            return;
+        }
+        const overflow = windowOverflow();
+        if (!overflow) {
+            return;
+        }
 
-  const handleFree = (e: MouseEvent | FocusEvent | TouchEvent) => {
-    e.nativeEvent.stopImmediatePropagation();
-    setDrag(false);
-    setLastPosition(position);
-  };
+        const { clientX, clientY } = e;
+        const value = isBottom ? clientX : clientY;
+        const diff = limiter(value, overflow);
+        setPosition(diff);
+        changePosition();
+    };
 
-  const handleScroll = (e: WheelEvent) => {
-    const { deltaY } = e;
-    const overflow = windowOverflow();
-    if (!overflow) {
-      return;
-    }
+    const handleMouseDown = (e: MouseEvent) => {
+        const { clientX, clientY } = e;
+        e.nativeEvent.stopImmediatePropagation();
+        setTrackPosition(isBottom ? clientX : clientY);
+        setDrag(true);
+    };
 
-    const value = deltaY > 0 ? -80 : 80;
-    const diff = limiter(value, overflow, true);
-    setPosition(diff);
-    changePosition();
-    setLastPosition(position);
-  };
+    const handleTouchstart = (e: TouchEvent) => {
+        const { touches } = e;
+        e.nativeEvent.stopImmediatePropagation();
+        setTrackPosition(isBottom ? touches[0].clientX : touches[0].clientY);
+        setDrag(true);
+    };
 
-  return (
-    <div
-      onMouseDown={handleMouseDown}
-      onTouchStart={handleTouchstart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleFree}
-      onMouseUp={handleFree}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleFree}
-      onWheel={handleScroll}
-      onBlur={handleFree}
-      className={cn("panel", `panel--${orientation}`, {
-        [`panel--${orientation}--shown`]: isShown,
-      })}
-    >
-      <div ref={panel} className="panel-content">
-        {isShown && children}
-      </div>
-      <button onClick={handleClick}>
-        {orientation === "bottom"
-          ? language["ui.button.views"]
-          : language["ui.button.places"]}
-      </button>
-    </div>
-  );
+    const handleTouchMove = (e: TouchEvent) => {
+        const { touches } = e;
+        const { clientX, clientY } = touches[0];
+        const overflow = windowOverflow();
+        if (!overflow) {
+            return;
+        }
+
+        const value = isBottom ? clientX : clientY;
+        const diff = limiter(value, overflow);
+        setPosition(diff);
+        changePosition();
+    };
+
+    const handleFree = (e: MouseEvent | FocusEvent | TouchEvent) => {
+        e.nativeEvent.stopImmediatePropagation();
+        setDrag(false);
+        setLastPosition(position);
+    };
+
+    const handleScroll = (e: WheelEvent) => {
+        const { deltaY } = e;
+        const overflow = windowOverflow();
+        if (!overflow) {
+            return;
+        }
+
+        const value = deltaY > 0 ? -80 : 80;
+        const diff = limiter(value, overflow, true);
+        setPosition(diff);
+        changePosition();
+        setLastPosition(position);
+    };
+
+    return (
+        <div
+            onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchstart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleFree}
+            onMouseUp={handleFree}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleFree}
+            onWheel={handleScroll}
+            onBlur={handleFree}
+            className={cn('panel', `panel--${orientation}`, {
+                [`panel--${orientation}--shown`]: isShown,
+            })}
+        >
+            <div ref={panel} className="panel-content">
+                {isShown && children}
+            </div>
+            <button onClick={handleClick}>
+                {orientation === 'bottom'
+                    ? language['ui.button.views']
+                    : language['ui.button.places']}
+            </button>
+        </div>
+    );
 };
 
-PanelComponent.displayName = "PanelComponent";
+PanelComponent.displayName = 'PanelComponent';

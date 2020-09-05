@@ -4,3 +4,4 @@ build
 .idea
 .firebase
 yarn.lock
+yarn-error.log
