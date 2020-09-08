@@ -14,6 +14,10 @@ $panelBorderSize: 8px;
     background-repeat: repeat;
     border: none;
 
+    &:focus {
+        outline: none;
+    }
+
     &-content {
         display: flex;
         align-items: center;
@@ -57,6 +61,7 @@ $panelBorderSize: 8px;
         border-image: $borderRight 32 16 0 0;
         border-image-width: 100% $panelBorderSize*2 0 0;
         border-image-outset: 0 $panelBorderSize - 2px 0 0;
+        border-image-repeat: round round;
         transition: left $transitionDuration $transitionType;
 
         .panel-content {

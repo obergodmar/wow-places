@@ -19,7 +19,7 @@ export const RangeComponent: React.FC<Props> = ({ handleChange, defaultValue }: 
     const handleFocus = useCallback(() => setPressed(true), []);
     const handleFree = useCallback(() => setPressed(false), []);
 
-    const limiter = (value: number, width: number) => {
+    const limiter = useCallback((value: number, width: number) => {
         let diff = value;
         if (diff > width - 35) {
             diff = MAX;
@@ -27,30 +27,33 @@ export const RangeComponent: React.FC<Props> = ({ handleChange, defaultValue }: 
             diff = 0;
         }
         return diff;
-    };
+    }, []);
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-        if (!stick || !stick.current || !stick.current.parentNode) {
-            return;
-        }
+    const handleKeyDown = useCallback(
+        (e: KeyboardEvent) => {
+            if (!stick || !stick.current || !stick.current.parentNode) {
+                return;
+            }
 
-        const handleChangePosition = (value: number): void => {
-            setPosition(value);
-            handleChange(value / MAX);
-        };
+            const handleChangePosition = (value: number): void => {
+                setPosition(value);
+                handleChange(value / MAX);
+            };
 
-        const { width } = (stick.current.parentNode as HTMLDivElement).getBoundingClientRect();
-        switch (e.keyCode) {
-            case 37:
-                handleChangePosition(limiter(position - 5, width));
-                break;
-            case 39:
-                handleChangePosition(limiter(position + 5, width));
-                break;
-            default:
-                break;
-        }
-    };
+            const { width } = (stick.current.parentNode as HTMLDivElement).getBoundingClientRect();
+            switch (e.keyCode) {
+                case 37:
+                    handleChangePosition(limiter(position - 5, width));
+                    break;
+                case 39:
+                    handleChangePosition(limiter(position + 5, width));
+                    break;
+                default:
+                    break;
+            }
+        },
+        [handleChange, limiter, position, stick],
+    );
 
     const handlePoint = useCallback(
         (e: React.MouseEvent | MouseEvent) => {
@@ -66,7 +69,7 @@ export const RangeComponent: React.FC<Props> = ({ handleChange, defaultValue }: 
             setPosition(diff);
             handleChange(diff / MAX);
         },
-        [stick, handleChange],
+        [limiter, handleChange, stick],
     );
 
     const handleMouseMove = useCallback(
@@ -99,23 +102,26 @@ export const RangeComponent: React.FC<Props> = ({ handleChange, defaultValue }: 
             setPosition(diff);
             handleChange(diff / MAX);
         },
-        [isPressed, stick, handleChange],
+        [isPressed, limiter, handleChange, stick],
     );
 
-    const handleScroll = (e: WheelEvent) => {
-        if (!stick || !stick.current || !stick.current.parentNode) {
-            return;
-        }
-        const range = stick.current.parentNode as HTMLDivElement;
-        const { width } = range.getBoundingClientRect();
-        range.focus();
-        const { deltaY } = e;
-        const value = position + (deltaY > 0 ? -5 : 5);
-        const diff = limiter(value, width);
+    const handleScroll = useCallback(
+        (e: WheelEvent) => {
+            if (!stick || !stick.current || !stick.current.parentNode) {
+                return;
+            }
+            const range = stick.current.parentNode as HTMLDivElement;
+            const { width } = range.getBoundingClientRect();
+            range.focus();
+            const { deltaY } = e;
+            const value = position + (deltaY > 0 ? -5 : 5);
+            const diff = limiter(value, width);
 
-        setPosition(diff);
-        handleChange(diff / MAX);
-    };
+            setPosition(diff);
+            handleChange(diff / MAX);
+        },
+        [handleChange, limiter, position, stick],
+    );
 
     useEffect(() => {
         window.addEventListener('mousemove', handleMouseMove);

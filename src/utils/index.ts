@@ -2,6 +2,7 @@ import { LOADING_DURATION } from './constants';
 import Sound from '../modules/sound';
 
 export * from './constants';
+export * from './types';
 
 export { bootstrapSettings } from './bootstrap-settings';
 

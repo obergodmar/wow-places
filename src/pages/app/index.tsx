@@ -1,14 +1,5 @@
 import * as React from 'react';
-import {
-    KeyboardEvent,
-    useCallback,
-    useEffect,
-    useLayoutEffect,
-    useMemo,
-    useRef,
-    useState,
-} from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 import {
     MainMenuComponent,
@@ -20,109 +11,50 @@ import {
     ViewComponent,
 } from '../../components';
 import places from '../../assets';
-import { author, authorUrl, delay, soundLoad, UI_SOUND_VOLUME, version } from '../../utils';
-import { useSettings } from '../../hooks';
-
-import PanelOpenAudio from '../../assets/audio/panel-open.ogg';
-import PanelCloseAudio from '../../assets/audio/panel-close.ogg';
-
-import SettingsOpenAudio from '../../assets/audio/menu-open.ogg';
-import SettingsCloseAudio from '../../assets/audio/menu-close.ogg';
-
-import CheckBoxOnAudio from '../../assets/audio/check-box-on.ogg';
-import CheckBoxOffAudio from '../../assets/audio/check-box-off.ogg';
-
+import { author, authorUrl, Orientation, version } from '../../utils';
+import { usePlaceView, useSettings, useUiSound } from '../../hooks';
 import Sound from '../../modules/sound';
 
 import './style.scss';
 
 export const App: React.FC = () => {
     const {
-        settings: { uiSound, musicVolume, language },
+        settings: { uiSound, musicVolume },
     } = useSettings();
-    const { placeName, viewNumber } = useParams();
-    const { currentPlace, currentView } = useMemo(() => {
-        let placeIndex = places.findIndex((place) => place.name === placeName);
-        placeIndex = placeIndex === -1 ? 0 : placeIndex;
-        let viewIndex = Number(viewNumber) || 0;
-        viewIndex =
-            places[placeIndex].view.length > viewIndex
-                ? viewIndex
-                : places[placeIndex].view.length - 1;
-        return {
-            currentPlace: placeIndex,
-            currentView: viewIndex,
-        };
-    }, [placeName, viewNumber]);
-    const history = useHistory();
-    const [isSettingsShown, setSettingsShown] = useState(false);
-    const [isLoading, setLoading] = useState(false);
-    const [isPlaying, setPlaying] = useState(false);
-    const [isLeftPanelShown, setLeftPanelShown] = useState(false);
-    const [isBottomPanelShown, setBottomPanelShown] = useState(false);
-    const [activePlace, setActivePlace] = useState(currentPlace);
-    const [activeView, setActiveView] = useState(currentView);
 
-    const panelOpenSound = useMemo(() => soundLoad(PanelOpenAudio, UI_SOUND_VOLUME), []);
-    const panelCloseSound = useMemo(() => soundLoad(PanelCloseAudio, UI_SOUND_VOLUME), []);
-    const settingsOpenSound = useMemo(() => soundLoad(SettingsOpenAudio, UI_SOUND_VOLUME), []);
-    const settingsCloseSound = useMemo(() => soundLoad(SettingsCloseAudio, UI_SOUND_VOLUME), []);
-    const checkboxOnSound = useMemo(() => soundLoad(CheckBoxOnAudio, UI_SOUND_VOLUME), []);
-    const checkboxOffSound = useMemo(() => soundLoad(CheckBoxOffAudio, UI_SOUND_VOLUME), []);
+    const [isSettingsShown, setSettingsShown] = useState(false);
+    const [isPlaying, setPlaying] = useState(false);
+
+    const {
+        panelOpenSound,
+        panelCloseSound,
+        settingsOpenSound,
+        settingsCloseSound,
+        checkboxOnSound,
+        checkboxOffSound,
+    } = useUiSound();
 
     const [currentPlaying, setCurrentPlaying] = useState<Sound>();
+    const {
+        isLoading,
+        activePlace,
+        activeView,
+        closePanels,
+        hideBottomPanel,
+        hideLeftPanel,
+        isBottomPanelShown,
+        isLeftPanelShown,
+        onBottomPanelClick,
+        onLeftPanelClick,
+    } = usePlaceView({ panelOpenSound, panelCloseSound });
 
     const app = useRef<HTMLDivElement>(null);
-
-    const handleHideLeftPanel = useCallback(() => {
-        setBottomPanelShown(false);
-        setLeftPanelShown(!isLeftPanelShown);
-    }, [isLeftPanelShown]);
-
-    const handleHideBottomPanel = useCallback(() => {
-        setLeftPanelShown(false);
-        setBottomPanelShown(!isBottomPanelShown);
-    }, [isBottomPanelShown]);
-
-    const delayedChange = useCallback(
-        (fn: (value: number) => void, value: number) => {
-            if (isLoading) {
-                return;
-            }
-            fn(value);
-            setLoading(true);
-            delay().then(() => {
-                setLoading(false);
-            });
-        },
-        [isLoading],
-    );
-
-    const handleLeftPreviewClick = useCallback(
-        (value: number) => {
-            delayedChange(setActivePlace, value);
-            setActiveView(0);
-        },
-        [delayedChange],
-    );
-
-    const handleBottomPreviewClick = useCallback(
-        (value: number) => {
-            delayedChange(setActiveView, value);
-        },
-        [delayedChange],
-    );
 
     useEffect(() => {
         if (app && app.current) {
             app.current.focus();
         }
     }, [app]);
-
-    useLayoutEffect(() => {
-        history.push(`/${places[activePlace].name}/${activeView}`);
-        document.title = language[`place.${places[activePlace].name}` as keyof typeof language];
-    }, [activePlace, activeView, language, history]);
 
     useEffect(() => {
         if (!currentPlaying) {
@@ -156,13 +88,13 @@ export const App: React.FC = () => {
             switch (e.keyCode) {
                 case 27:
                     if (isLeftPanelShown || isBottomPanelShown) {
-                        setLeftPanelShown(false);
-                        setBottomPanelShown(false);
+                        closePanels();
                         break;
                     }
                     openCloseSettings();
                     break;
                 case 32:
+                    // TODO: ADD STATUS
                     if (!currentPlaying) {
                         return;
                     }
@@ -177,9 +109,17 @@ export const App: React.FC = () => {
                     break;
             }
         },
-        [isLeftPanelShown, isBottomPanelShown, isPlaying, currentPlaying, openCloseSettings],
+        [
+            isLeftPanelShown,
+            isBottomPanelShown,
+            openCloseSettings,
+            currentPlaying,
+            isPlaying,
+            closePanels,
+        ],
     );
 
+    // TODO: author focus scss round
     return (
         <div
             ref={app}
@@ -197,12 +137,10 @@ export const App: React.FC = () => {
                 <MenuItemComponent isActive={isSettingsShown} handleClick={openCloseSettings} />
             </MainMenuComponent>
             <PanelComponent
-                openSoundPlay={panelOpenSound.playSound}
-                closeSoundPlay={panelCloseSound.playSound}
                 itemsCount={places.length || 0}
-                orientation="left"
+                orientation={Orientation.left}
                 isShown={isLeftPanelShown}
-                setShown={handleHideLeftPanel}
+                setShown={hideLeftPanel}
             >
                 {places.map((place, index) => (
                     <PreviewComponent
@@ -210,25 +148,23 @@ export const App: React.FC = () => {
                         isLoading={isLoading}
                         key={index}
                         value={index}
-                        handleChange={handleLeftPreviewClick}
+                        handleChange={onLeftPanelClick}
                         src={place.preview[0]}
                     />
                 ))}
             </PanelComponent>
             <PanelComponent
-                openSoundPlay={panelOpenSound.playSound}
-                closeSoundPlay={panelCloseSound.playSound}
                 itemsCount={places[activePlace].preview.length || 0}
-                orientation="bottom"
+                orientation={Orientation.bottom}
                 isShown={isBottomPanelShown}
-                setShown={handleHideBottomPanel}
+                setShown={hideBottomPanel}
             >
                 {places[activePlace].preview.map((preview, index) => (
                     <PreviewComponent
                         isLoading={isLoading}
                         key={index}
                         value={index}
-                        handleChange={handleBottomPreviewClick}
+                        handleChange={onBottomPanelClick}
                         src={preview}
                     />
                 ))}

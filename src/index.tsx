@@ -6,14 +6,14 @@ import { SettingsProvider } from './settings-context';
 import { bootstrapSettings, DEFAULT_PLACE, PATH_PLACES } from './utils';
 import { App, NotFound } from './pages';
 
+const Root = () => <Redirect to={DEFAULT_PLACE} />;
+
 const Init: React.FC = () => {
     return (
         <SettingsProvider settings={bootstrapSettings()}>
             <Router>
                 <Switch>
-                    <Route exact path="/">
-                        <Redirect from="/" to={DEFAULT_PLACE} />
-                    </Route>
+                    <Route exact path="/" component={Root} />
                     <Route exact path={PATH_PLACES} component={App} />
                     <Route component={NotFound} />
                 </Switch>
@@ -21,5 +21,7 @@ const Init: React.FC = () => {
         </SettingsProvider>
     );
 };
+
+Init.displayName = 'Init';
 
 ReactDom.render(<Init />, document.getElementById('root'));
