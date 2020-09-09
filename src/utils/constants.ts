@@ -15,4 +15,4 @@ export const PATH_PLACES = '/:placeName/:viewNumber';
 
 export const author = 'obergodmar';
 export const authorUrl = 'https://github.com/obergodmar';
-export const version = 'v1.3.1';
+export const version = 'v2.0.0';
