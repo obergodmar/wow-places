@@ -2,6 +2,7 @@ import * as React from 'react';
 import { KeyboardEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 import {
+    DialogModal,
     MainMenuComponent,
     MenuItemComponent,
     MusicComponent,
@@ -181,6 +182,7 @@ export const App: React.FC = () => {
                 setPlaying={setPlaying}
                 setCurrentPlaying={setCurrentPlaying}
             />
+            <DialogModal text="LOL" />
         </div>
     );
 };

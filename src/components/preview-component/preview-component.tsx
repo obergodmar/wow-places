@@ -26,6 +26,7 @@ export const PreviewComponent: React.FC<Props> = ({
         settings: { language },
     } = useSettings();
     const [isLoaded, setLoaded] = useState(false);
+    // TODO: Refactor like in ViewComponent
     const image = useMemo(() => {
         setLoaded(false);
         const img = new Image();

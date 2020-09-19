@@ -10,3 +10,4 @@ export { MusicComponent } from './music-component';
 export { MainMenuComponent } from './main-menu-component';
 export { MenuItemComponent } from './menu-item-component';
 export { DialogBox } from './dialog-box';
+export { DialogModal } from './dialog-modal';
