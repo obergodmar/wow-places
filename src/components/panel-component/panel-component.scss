@@ -1,4 +1,4 @@
-@import "../../app/style";
+@import "../../pages/app/style";
 
 $panelWidth: $previewWidth + 40px;
 $panelHeight: $previewHeight + 40px;
@@ -13,6 +13,10 @@ $panelBorderSize: 8px;
     background-image: $panelBackground;
     background-repeat: repeat;
     border: none;
+
+    &:focus {
+        outline: none;
+    }
 
     &-content {
         display: flex;
@@ -57,6 +61,7 @@ $panelBorderSize: 8px;
         border-image: $borderRight 32 16 0 0;
         border-image-width: 100% $panelBorderSize*2 0 0;
         border-image-outset: 0 $panelBorderSize - 2px 0 0;
+        border-image-repeat: round round;
         transition: left $transitionDuration $transitionType;
 
         .panel-content {

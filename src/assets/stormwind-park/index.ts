@@ -1,10 +1,10 @@
-import preview from "./preview";
-import view from "./view";
-import music from "./music";
+import preview from './preview';
+import view from './view';
+import music from './music';
 
 export default {
-  name: "stormwind-park",
-  music,
-  view,
-  preview,
+    name: 'stormwind-park',
+    music,
+    view,
+    preview,
 };

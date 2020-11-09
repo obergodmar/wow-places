@@ -1,4 +1,4 @@
-@import "../../app/style";
+@import "../../pages/app/style";
 
 $menuItemWidth: 32px;
 $menuItemHeight: 41px;
@@ -7,14 +7,29 @@ $menuItemHeight: 41px;
     z-index: 4;
     width: $menuItemWidth - 4px;
     height: $menuItemHeight - 4px;
-    background-image: $helpButton;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: $menuItemWidth $menuItemHeight;
     border-radius: 6px;
 
-    &--active {
+    &--active.menu-item-help {
         background-image: $helpButtonClick;
+    }
+
+    &--active.menu-item-settings {
+        background-image: $settingsButtonClick;
+    }
+
+    &-help,
+    &-settings {
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: $menuItemWidth $menuItemHeight;
+    }
+
+    &-help {
+        background-image: $helpButton;
+    }
+
+    &-settings {
+        background-image: $settingsButton;
     }
 
     &:hover {
@@ -26,7 +41,11 @@ $menuItemHeight: 41px;
         box-shadow: $hoverBox;
     }
 
-    &:active {
+    &:active.menu-item-help {
         background-image: $helpButtonClick;
+    }
+
+    &:active.menu-item-settings {
+        background-image: $settingsButtonClick;
     }
 }

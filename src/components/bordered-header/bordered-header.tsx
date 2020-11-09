@@ -1,13 +1,13 @@
-import * as React from "react";
+import * as React from 'react';
 
-import "./bordered-header.scss";
+import './bordered-header.scss';
 
 interface Props {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }
 
 export const BorderedHeader: React.FC<Props> = ({ children }: Props) => (
-  <div className="header">{children}</div>
+    <div className="header">{children}</div>
 );
 
-BorderedHeader.displayName = "BorderedHeader";
+BorderedHeader.displayName = 'BorderedHeader';

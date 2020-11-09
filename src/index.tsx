@@ -1,23 +1,27 @@
-import * as React from "react";
-import ReactDom from "react-dom";
+import * as React from 'react';
+import ReactDom from 'react-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 
-import { Settings, SettingsProvider } from "./settings-context";
-import App from "./app";
+import { SettingsProvider } from './settings-context';
+import { bootstrapSettings, DEFAULT_PLACE, PATH_PLACES } from './utils';
+import { App, NotFound } from './pages';
 
-import ru from "./locales/ru.json";
-import en from "./locales/en.json";
+const Root = () => <Redirect to={DEFAULT_PLACE} />;
 
-const defaultSettings: Settings = {
-  language: ru,
-  musicVolume: 1.0,
-  currentLanguage: ru["ui.language"],
-  uiLanguage: [ru["ui.language"], en["ui.language"]],
-  uiSound: true,
+const Init: React.FC = () => {
+    return (
+        <SettingsProvider settings={bootstrapSettings()}>
+            <Router>
+                <Switch>
+                    <Route exact path="/" component={Root} />
+                    <Route exact path={PATH_PLACES} component={App} />
+                    <Route component={NotFound} />
+                </Switch>
+            </Router>
+        </SettingsProvider>
+    );
 };
 
-ReactDom.render(
-  <SettingsProvider settings={defaultSettings}>
-    <App />
-  </SettingsProvider>,
-  document.getElementById("root")
-);
+Init.displayName = 'Init';
+
+ReactDom.render(<Init />, document.getElementById('root'));

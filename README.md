@@ -10,8 +10,8 @@ This app tries to parody the interface of the game World of Warcraft. You can ch
 ### Screenshots
 
 * Views
-![Screenshot 1](screenshots/screenshot-1.jpg)
+![Screenshot 1](screenshots/screenshot-1.png)
 * Places
-![Screenshot 2](screenshots/screenshot-2.jpg)
+![Screenshot 2](screenshots/screenshot-2.png)
 * Settings
-![Screenshot 3](screenshots/screenshot-3.jpg)
+![Screenshot 3](screenshots/screenshot-3.png)
