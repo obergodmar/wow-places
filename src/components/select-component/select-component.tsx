@@ -23,7 +23,7 @@ export const SelectComponent: React.FC<Props> = ({
     const handleSelectClick = useCallback(() => setSelectShown(!isSelectShown), [isSelectShown]);
 
     const handleBlur = (e: FocusEvent) => {
-        if (!dropDownRef || !dropDownRef.current) {
+        if (!dropDownRef.current) {
             return;
         }
         if (

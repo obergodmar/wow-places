@@ -12,15 +12,16 @@ import {
     ViewComponent,
 } from '../../components';
 import places from '../../assets';
-import { author, authorUrl, Orientation, version } from '../../utils';
-import { usePlaceView, useSettings, useUiSound } from '../../hooks';
+import { author, authorUrl, Orientation } from '../../utils';
+import { useDialog, usePlaceView, useSettings, useUiSound } from '../../hooks';
 import Sound from '../../modules/sound';
 
 import './style.scss';
+import { MenuItems } from '../../components/menu-item-component/menu-item-component';
 
 export const App: React.FC = () => {
     const {
-        settings: { uiSound, musicVolume },
+        settings: { uiSound, musicVolume, language },
     } = useSettings();
 
     const [isSettingsShown, setSettingsShown] = useState(false);
@@ -50,12 +51,30 @@ export const App: React.FC = () => {
     } = usePlaceView({ panelOpenSound, panelCloseSound });
 
     const app = useRef<HTMLDivElement>(null);
+    const dialogText = [
+        language['ui.dialog.welcome.text-1'],
+        language['ui.dialog.welcome.text-2'],
+        language['ui.dialog.welcome.text-3'],
+    ];
+    const {
+        bottomPanelButtonRef,
+        offsetTop,
+        handleShowDialog,
+        handleHideDialog,
+        handleDialogMenuItemClick,
+        isDialogShown,
+        isDialogMounted,
+    } = useDialog({
+        isBottomPanelShown,
+        stepsCount: dialogText.length,
+    });
 
     useEffect(() => {
-        if (app && app.current) {
+        if (app.current) {
             app.current.focus();
         }
-    }, [app]);
+        handleShowDialog();
+    }, [app, handleShowDialog]);
 
     useEffect(() => {
         if (!currentPlaying) {
@@ -65,13 +84,15 @@ export const App: React.FC = () => {
         currentPlaying.playMusic();
     }, [currentPlaying, musicVolume]);
 
-    const appClick = useCallback(() => currentPlaying && currentPlaying.playMusic(), [
-        currentPlaying,
-    ]);
+    const appClick = useCallback(() => {
+        if (currentPlaying) {
+            currentPlaying.playMusic();
+        }
+    }, [currentPlaying]);
 
     const openCloseSettings = useCallback(() => {
         setSettingsShown(!isSettingsShown);
-        if (app && app.current) {
+        if (app.current) {
             app.current.focus();
         }
         if (!uiSound) {
@@ -133,9 +154,18 @@ export const App: React.FC = () => {
             <MainMenuComponent>
                 <div className="author">
                     <a href={authorUrl}>{author}</a>
-                    <span>{version}</span>
+                    <span>{`v${process.env.REACT_APP_VERSION}`}</span>
                 </div>
-                <MenuItemComponent isActive={isSettingsShown} handleClick={openCloseSettings} />
+                <MenuItemComponent
+                    isActive={isDialogMounted}
+                    handleClick={handleDialogMenuItemClick}
+                    type={MenuItems.help}
+                />
+                <MenuItemComponent
+                    isActive={isSettingsShown}
+                    handleClick={openCloseSettings}
+                    type={MenuItems.settings}
+                />
             </MainMenuComponent>
             <PanelComponent
                 itemsCount={places.length || 0}
@@ -159,6 +189,7 @@ export const App: React.FC = () => {
                 orientation={Orientation.bottom}
                 isShown={isBottomPanelShown}
                 setShown={hideBottomPanel}
+                ref={bottomPanelButtonRef}
             >
                 {places[activePlace].preview.map((preview, index) => (
                     <PreviewComponent
@@ -182,7 +213,15 @@ export const App: React.FC = () => {
                 setPlaying={setPlaying}
                 setCurrentPlaying={setCurrentPlaying}
             />
-            <DialogModal text="LOL" />
+            {isDialogMounted && (
+                <DialogModal
+                    title={language['ui.dialog.welcome.title']}
+                    text={dialogText}
+                    offsetTop={offsetTop}
+                    isShown={isDialogShown}
+                    onClose={handleHideDialog}
+                />
+            )}
         </div>
     );
 };

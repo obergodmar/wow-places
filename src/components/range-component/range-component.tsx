@@ -31,7 +31,7 @@ export const RangeComponent: React.FC<Props> = ({ handleChange, defaultValue }: 
 
     const handleKeyDown = useCallback(
         (e: KeyboardEvent) => {
-            if (!stick || !stick.current || !stick.current.parentNode) {
+            if (!stick.current || !stick.current.parentNode) {
                 return;
             }
 
@@ -57,7 +57,7 @@ export const RangeComponent: React.FC<Props> = ({ handleChange, defaultValue }: 
 
     const handlePoint = useCallback(
         (e: React.MouseEvent | MouseEvent) => {
-            if (!stick || !stick.current || !stick.current.parentNode) {
+            if (!stick.current || !stick.current.parentNode) {
                 return;
             }
             const { width, left } = (stick.current
@@ -90,7 +90,7 @@ export const RangeComponent: React.FC<Props> = ({ handleChange, defaultValue }: 
             const { touches } = e;
             const { clientX } = touches[0];
 
-            if (!stick || !stick.current || !stick.current.parentNode) {
+            if (!stick.current || !stick.current.parentNode) {
                 return;
             }
             const { width, left } = (stick.current
@@ -107,7 +107,7 @@ export const RangeComponent: React.FC<Props> = ({ handleChange, defaultValue }: 
 
     const handleScroll = useCallback(
         (e: WheelEvent) => {
-            if (!stick || !stick.current || !stick.current.parentNode) {
+            if (!stick.current || !stick.current.parentNode) {
                 return;
             }
             const range = stick.current.parentNode as HTMLDivElement;

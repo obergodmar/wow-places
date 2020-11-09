@@ -7,18 +7,18 @@ import { Settings } from '../../settings-context';
 import './checkbox-component.scss';
 
 interface Props {
-    handleClick: (option: keyof Settings) => void;
+    handleClick: (option: keyof Settings) => () => void;
     optionName: keyof Settings;
     value: boolean;
 }
 
 export const CheckboxComponent: React.FC<Props> = ({ handleClick, optionName, value }: Props) => {
     const handleKeyDown = useCallback(
-        (e: KeyboardEvent, option: keyof Settings) => {
+        (option: keyof Settings) => (e: KeyboardEvent) => {
             if (e.keyCode !== 13 && e.keyCode !== 32) {
                 return;
             }
-            handleClick(option);
+            handleClick(option)();
         },
         [handleClick],
     );
@@ -26,8 +26,8 @@ export const CheckboxComponent: React.FC<Props> = ({ handleClick, optionName, va
     return (
         <div
             tabIndex={0}
-            onClick={() => handleClick(optionName)}
-            onKeyDown={(e) => handleKeyDown(e, optionName)}
+            onClick={handleClick(optionName)}
+            onKeyDown={handleKeyDown(optionName)}
             className={cn('checkbox', { 'checkbox--checked': value })}
         />
     );

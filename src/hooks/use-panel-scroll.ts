@@ -43,6 +43,16 @@ type panelScrollType = {
     };
 };
 
+const calculateOverflow = (isBottom: boolean, itemsCount: number) => {
+    const { innerWidth, innerHeight } = window;
+    const windowSize = isBottom ? innerWidth : innerHeight;
+    const containerSize = itemsCount * ((isBottom ? PREVIEW_WIDTH : PREVIEW_HEIGHT) + 15);
+    if (!(containerSize > windowSize)) {
+        return 0;
+    }
+    return Math.abs(containerSize - windowSize);
+};
+
 /* eslint-disable no-param-reassign */
 export const usePanelScroll = ({
     orientation,
@@ -55,12 +65,13 @@ export const usePanelScroll = ({
     const [trackPosition, setTrackPosition] = useState(0);
     const [position, setPosition] = useState(0);
     const [lastPosition, setLastPosition] = useState(0);
+    const [overflow, setOverflow] = useState(0);
 
     const isBottom = useMemo(() => orientation === Orientation.bottom, [orientation]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            if (ref && ref.current && isShown) {
+            if (ref.current && isShown) {
                 ref.current.focus();
             }
         }, ANIMATION_DURATION);
@@ -91,12 +102,17 @@ export const usePanelScroll = ({
         const handleResize = debounce(() => {
             resetPanel();
             timeout = setTimeout(() => {
-                if (!panel || !panel.current) {
+                if (!panel.current) {
                     return;
                 }
                 panel.current.style.transition = 'unset';
             }, ANIMATION_DURATION);
+
+            const overflowValue = calculateOverflow(isBottom, itemsCount);
+            setOverflow(overflowValue);
         }, 100);
+
+        handleResize();
         window.addEventListener('resize', handleResize);
         return () => {
             if (timeout) {
@@ -104,23 +120,13 @@ export const usePanelScroll = ({
             }
             window.removeEventListener('resize', handleResize);
         };
-    }, [panel, resetPanel]);
+    }, [panel, resetPanel, isBottom, itemsCount]);
 
     useEffect(() => {
         if (!isShown) {
             resetPanel(false);
         }
     }, [isShown, resetPanel]);
-
-    const overflow = useMemo(() => {
-        const { innerWidth, innerHeight } = window;
-        const windowSize = isBottom ? innerWidth : innerHeight;
-        const containerSize = itemsCount * ((isBottom ? PREVIEW_WIDTH : PREVIEW_HEIGHT) + 15);
-        if (!(containerSize > windowSize)) {
-            return 0;
-        }
-        return Math.abs(containerSize - windowSize);
-    }, [isBottom, itemsCount]);
 
     const changePosition = useCallback(() => {
         if (!panel.current) {

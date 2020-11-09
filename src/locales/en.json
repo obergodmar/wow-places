@@ -8,11 +8,17 @@
   "ui.uiLanguage": "Language",
   "ui.language": "English",
   "ui.musicVolume": "Music",
+  "ui.dialog.welcome.title": "Dinastro EU-Дракономор",
+  "ui.dialog.welcome.text-1": "Welcome in World of Warcraft best places! To choose the place, you need to open the left panel and select a desired place. Every place has different views, you can select them from the bottom panel.",
+  "ui.dialog.welcome.text-2": "On the right corner you can find settings and help button. In the settings you can turn off UI sound and change volume. With help button you can play this dialog again.",
+  "ui.dialog.welcome.text-3": "With space button you can pause current playing, but any click on application will trigger playing.",
   "place.stormwind-park": "Stormwind Park",
   "place.halls-of-valor": "Halls Of Valor",
   "place.pandaria": "Pandaria",
   "place.dalaran": "Dalaran",
   "place.crystalsong-forest": "Crystalsong forest",
   "place.nagrand": "Nagrand",
+  "place.grizzly-hills": "Grizzly Hills",
+  "place.boralus": "Boralus",
   "error.404": "Place not found"
 }

@@ -4,11 +4,11 @@ import {
     TouchEvent,
     useCallback,
     useEffect,
-    useLayoutEffect,
+    useMemo,
     useState,
 } from 'react';
 
-import { DEFAULT_HEIGHT, DEFAULT_WIDTH } from '../utils';
+import { debounce, DEFAULT_HEIGHT, DEFAULT_WIDTH } from '../utils';
 
 interface Position {
     x: number;
@@ -44,28 +44,29 @@ export const useViewScroll = (): ViewScrollType => {
     const [lastPosition, setLastPosition] = useState(initialPosition);
     const [isBigScreen, setBigScreen] = useState(false);
 
-    const handleResize = useCallback(() => {
-        const { innerWidth, innerHeight } = window;
+    const handleResize = useMemo(
+        () =>
+            debounce(() => {
+                const { innerWidth, innerHeight } = window;
 
-        let width = 0;
-        let height = 0;
-        setBigScreen(false);
+                let width = 0;
+                let height = 0;
+                setBigScreen(false);
 
-        if (innerHeight < DEFAULT_HEIGHT && innerWidth < DEFAULT_WIDTH) {
-            width = (innerWidth - DEFAULT_WIDTH) / 2;
-            height = (innerHeight - DEFAULT_HEIGHT) / 2;
-        } else {
-            setBigScreen(true);
-        }
-        setPosition({ x: width, y: height });
-        setLastPosition({ x: width, y: height });
-    }, []);
+                if (innerHeight < DEFAULT_HEIGHT && innerWidth < DEFAULT_WIDTH) {
+                    width = (innerWidth - DEFAULT_WIDTH) / 2;
+                    height = (innerHeight - DEFAULT_HEIGHT) / 2;
+                } else {
+                    setBigScreen(true);
+                }
+                setPosition({ x: width, y: height });
+                setLastPosition({ x: width, y: height });
+            }, 100),
+        [],
+    );
 
     useEffect(() => {
         handleResize();
-    }, [handleResize]);
-
-    useLayoutEffect(() => {
         window.addEventListener('resize', handleResize);
         return () => {
             window.removeEventListener('resize', handleResize);

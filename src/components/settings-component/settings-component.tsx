@@ -22,7 +22,7 @@ export const SettingsComponent: React.FC<Props> = ({
 }: Props) => {
     const { settings, saveSettings } = useSettings();
 
-    const handleCheckboxClick = (option: keyof Settings) => {
+    const handleCheckboxClick = (option: keyof Settings) => () => {
         saveSettings?.({ ...settings, [option]: !settings[option] });
         if (!settings.uiSound) {
             return;
