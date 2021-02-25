@@ -1,6 +1,7 @@
 {
   "name": "wow-best-places",
   "description": "This app is supposed to make you feel nostalgic",
+  "homepage": "https://wow-places.obergodmar.ru/",
   "version": "2.1.0",
   "license": "MIT",
   "author": {
@@ -9,7 +10,7 @@
     "url": "https://github.com/obergodmar"
   },
   "engines": {
-    "node": "10.22.0"
+    "node": "12.20.2"
   },
   "dependencies": {
     "classnames": "^2.2.6",
