@@ -30,10 +30,11 @@ export const DialogModal = memo<Props>(({ text, title, offsetTop, isShown, onClo
 
     return (
         <div
+            inert={!isShown}
             className={cn('dialog-modal', {
                 'dialog-modal_shown': isShown,
             })}
-            style={{ top: offsetTop - 30 }}
+            style={{ '--dialog-top': `${offsetTop - 30}px` } as React.CSSProperties}
         >
             <div className="dialog-modal_border">
                 <div className="dialog-modal_texture">

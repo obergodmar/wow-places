@@ -94,6 +94,9 @@ export const App: React.FC<{ places: Place[] }> = ({ places }) => {
     }, [currentPlaying]);
 
     const openCloseSettings = useCallback(() => {
+        if (!isSettingsShown) {
+            handleHideDialog();
+        }
         setSettingsShown(!isSettingsShown);
         if (app.current) {
             app.current.focus();
@@ -106,7 +109,7 @@ export const App: React.FC<{ places: Place[] }> = ({ places }) => {
         } else {
             settingsOpenSound.playSound();
         }
-    }, [app, isSettingsShown, uiSound, settingsCloseSound, settingsOpenSound]);
+    }, [app, isSettingsShown, uiSound, settingsCloseSound, settingsOpenSound, handleHideDialog]);
 
     const handleOpenSettings = useCallback(
         (e: KeyboardEvent) => {

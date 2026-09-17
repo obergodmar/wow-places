@@ -3,6 +3,7 @@
 
 .dialog-modal {
     position: absolute;
+    top: var(--dialog-top);
     left: 50%;
     z-index: 8;
     display: flex;
@@ -96,6 +97,53 @@
         &:active {
             justify-content: center;
             background-image: $dialogCloseButtonDown;
+        }
+    }
+}
+
+@media (max-width: 600px), (max-height: 500px) {
+    .dialog-modal {
+        top: 50%;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        width: min(530px, calc(100% - 32px));
+        max-height: calc(100% - 32px);
+        padding: 12px;
+        background-color: rgba(0, 0, 0, 0.85);
+        transform: translate(-50%, -50%);
+
+        &_border {
+            flex-shrink: 0;
+            width: 80px;
+            height: 80px;
+        }
+
+        &_texture,
+        &-image {
+            width: 64px;
+            height: 64px;
+        }
+
+        &-image {
+            background-size: 70px 70px;
+        }
+
+        &-content {
+            width: 100%;
+            min-height: 0;
+            padding: 0;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            background: none;
+            box-shadow: none;
+        }
+
+        &-button {
+            top: 8px;
+            right: 8px;
+            width: 44px;
+            height: 44px;
         }
     }
 }
