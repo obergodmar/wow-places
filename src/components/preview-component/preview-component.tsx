@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import cn from 'classnames';
 
 import { useSettings } from '../../hooks';
@@ -25,23 +25,16 @@ export const PreviewComponent: React.FC<Props> = ({
     const {
         settings: { language },
     } = useSettings();
-    const [isLoaded, setLoaded] = useState(false);
-    // TODO: Refactor like in ViewComponent
-    const image = useMemo(() => {
-        setLoaded(false);
-        const img = new Image();
-        img.src = src;
-        return img;
-    }, [src]);
-
+    const [loadedSrc, setLoadedSrc] = useState<string>();
+    const isLoaded = loadedSrc === src;
     useEffect(() => {
-        image.onload = () => {
-            setLoaded(true);
-        };
+        const image = new Image();
+        image.onload = () => setLoadedSrc(src);
+        image.src = src;
         return () => {
             image.onload = null;
         };
-    }, [image]);
+    }, [src]);
 
     const handleClick = useCallback(
         (e: React.MouseEvent) => {
@@ -53,11 +46,25 @@ export const PreviewComponent: React.FC<Props> = ({
 
     return (
         <div
+            role="button"
+            tabIndex={0}
+            aria-label={
+                name
+                    ? (language[name as keyof typeof language] ?? name.replace('place.', ''))
+                    : `View ${value + 1}`
+            }
+            onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    handleChange(value);
+                }
+            }}
             onContextMenu={handleClick}
             onClick={handleClick}
             style={{
                 margin: `${name ? '10px 5px' : '5px'}`,
-                backgroundImage: `url(${isLoaded ? image.src : Plug})`,
+                backgroundImage: `url(${isLoaded ? src : Plug})`,
             }}
             className={cn('preview', {
                 'preview--not-loaded': !isLoaded,
@@ -66,7 +73,9 @@ export const PreviewComponent: React.FC<Props> = ({
         >
             {name && (
                 <div className="preview-name">
-                    <BorderedHeader>{language[name as keyof typeof language]}</BorderedHeader>
+                    <BorderedHeader>
+                        {language[name as keyof typeof language] ?? name.replace('place.', '')}
+                    </BorderedHeader>
                 </div>
             )}
         </div>

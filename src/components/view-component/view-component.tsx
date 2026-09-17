@@ -14,22 +14,21 @@ interface Props {
 
 export const ViewComponent: React.FC<Props> = ({ src }: Props) => {
     const [imageSrc, setImageSrc] = useState(Background);
-    const [isLoaded, setLoaded] = useState(false);
+    const isLoaded = imageSrc === src;
 
     const { style, props } = useViewScroll();
 
     useEffect(() => {
-        setLoaded(false);
+        const image = new Image();
         const timer = setTimeout(() => {
-            const image = new Image();
-            image.src = src;
             image.onload = () => {
                 setImageSrc(src);
-                setLoaded(true);
             };
+            image.src = src;
         }, ANIMATION_DURATION);
         return () => {
             clearTimeout(timer);
+            image.onload = null;
         };
     }, [src]);
 

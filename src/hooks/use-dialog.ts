@@ -2,7 +2,7 @@ import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { ANIMATION_DURATION, debounce, DIALOG_STEP_DURATION } from '../utils';
 
 interface dialogPositionType {
-    bottomPanelButtonRef: RefObject<HTMLButtonElement>;
+    bottomPanelButtonRef: RefObject<HTMLButtonElement | null>;
     offsetTop: number;
     handleShowDialog: () => void;
     handleHideDialog: () => void;
@@ -39,6 +39,7 @@ export const useDialog = ({ isBottomPanelShown, stepsCount }: Props): dialogPosi
         window.addEventListener('resize', throttledUpdateOffset);
         return () => {
             window.removeEventListener('resize', throttledUpdateOffset);
+            throttledUpdateOffset.cancel();
         };
     }, [updateOffset]);
 

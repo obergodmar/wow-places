@@ -1,4 +1,4 @@
-@import "../../pages/app/style";
+@use '../../styles/tokens' as *;
 
 $rangeWidth: 90px;
 $rangeHeight: 3px;

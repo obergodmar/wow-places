@@ -1,0 +1,204 @@
+[
+    {
+        "name": "stormwind-park",
+        "preview": [
+            "/media/stormwind-park/preview/stormwind-park-1.jpg",
+            "/media/stormwind-park/preview/stormwind-park-2.jpg",
+            "/media/stormwind-park/preview/stormwind-park-3.jpg",
+            "/media/stormwind-park/preview/stormwind-park-4.jpg",
+            "/media/stormwind-park/preview/stormwind-park-5.jpg",
+            "/media/stormwind-park/preview/stormwind-park-6.jpg",
+            "/media/stormwind-park/preview/stormwind-park-7.jpg",
+            "/media/stormwind-park/preview/stormwind-park-8.jpg",
+            "/media/stormwind-park/preview/stormwind-park-9.jpg"
+        ],
+        "view": [
+            "/media/stormwind-park/view/stormwind-park-1.jpg",
+            "/media/stormwind-park/view/stormwind-park-2.jpg",
+            "/media/stormwind-park/view/stormwind-park-3.jpg",
+            "/media/stormwind-park/view/stormwind-park-4.jpg",
+            "/media/stormwind-park/view/stormwind-park-5.jpg",
+            "/media/stormwind-park/view/stormwind-park-6.jpg",
+            "/media/stormwind-park/view/stormwind-park-7.jpg",
+            "/media/stormwind-park/view/stormwind-park-8.jpg",
+            "/media/stormwind-park/view/stormwind-park-9.jpg"
+        ],
+        "music": [
+            "/media/stormwind-park/music/stormwind-park-music-1.mp3",
+            "/media/stormwind-park/music/stormwind-park-music-2.mp3"
+        ]
+    },
+    {
+        "name": "halls-of-valor",
+        "preview": [
+            "/media/halls-of-valor/preview/halls-of-valor-1.jpg",
+            "/media/halls-of-valor/preview/halls-of-valor-2.jpg",
+            "/media/halls-of-valor/preview/halls-of-valor-3.jpg",
+            "/media/halls-of-valor/preview/halls-of-valor-4.jpg"
+        ],
+        "view": [
+            "/media/halls-of-valor/view/halls-of-valor-1.jpg",
+            "/media/halls-of-valor/view/halls-of-valor-2.jpg",
+            "/media/halls-of-valor/view/halls-of-valor-3.jpg",
+            "/media/halls-of-valor/view/halls-of-valor-4.jpg"
+        ],
+        "music": ["/media/halls-of-valor/music/halls-of-valor-music-1.mp3"]
+    },
+    {
+        "name": "pandaria",
+        "preview": [
+            "/media/pandaria/preview/pandaria-1.jpg",
+            "/media/pandaria/preview/pandaria-2.jpg",
+            "/media/pandaria/preview/pandaria-3.jpg",
+            "/media/pandaria/preview/pandaria-4.jpg",
+            "/media/pandaria/preview/pandaria-5.jpg",
+            "/media/pandaria/preview/pandaria-6.jpg"
+        ],
+        "view": [
+            "/media/pandaria/view/pandaria-1.jpg",
+            "/media/pandaria/view/pandaria-2.jpg",
+            "/media/pandaria/view/pandaria-3.jpg",
+            "/media/pandaria/view/pandaria-4.jpg",
+            "/media/pandaria/view/pandaria-5.jpg",
+            "/media/pandaria/view/pandaria-6.jpg"
+        ],
+        "music": [
+            "/media/pandaria/music/pandaria-music-1.mp3",
+            "/media/pandaria/music/pandaria-music-2.mp3",
+            "/media/pandaria/music/pandaria-music-3.mp3",
+            "/media/pandaria/music/pandaria-music-4.mp3"
+        ]
+    },
+    {
+        "name": "dalaran",
+        "preview": [
+            "/media/dalaran/preview/dalaran-1.jpg",
+            "/media/dalaran/preview/dalaran-2.jpg",
+            "/media/dalaran/preview/dalaran-3.jpg",
+            "/media/dalaran/preview/dalaran-4.jpg",
+            "/media/dalaran/preview/dalaran-5.jpg"
+        ],
+        "view": [
+            "/media/dalaran/view/dalaran-1.jpg",
+            "/media/dalaran/view/dalaran-2.jpg",
+            "/media/dalaran/view/dalaran-3.jpg",
+            "/media/dalaran/view/dalaran-4.jpg",
+            "/media/dalaran/view/dalaran-5.jpg"
+        ],
+        "music": [
+            "/media/dalaran/music/dalaran-music-1.ogg",
+            "/media/dalaran/music/dalaran-music-2.ogg",
+            "/media/dalaran/music/dalaran-music-3.ogg",
+            "/media/dalaran/music/dalaran-music-4.ogg",
+            "/media/dalaran/music/dalaran-music-5.ogg"
+        ]
+    },
+    {
+        "name": "crystalsong-forest",
+        "preview": [
+            "/media/crystalsong-forest/preview/crystalsong-forest-1.jpg",
+            "/media/crystalsong-forest/preview/crystalsong-forest-2.jpg",
+            "/media/crystalsong-forest/preview/crystalsong-forest-3.jpg",
+            "/media/crystalsong-forest/preview/crystalsong-forest-4.jpg",
+            "/media/crystalsong-forest/preview/crystalsong-forest-5.jpg"
+        ],
+        "view": [
+            "/media/crystalsong-forest/view/crystalsong-forest-1.jpg",
+            "/media/crystalsong-forest/view/crystalsong-forest-2.jpg",
+            "/media/crystalsong-forest/view/crystalsong-forest-3.jpg",
+            "/media/crystalsong-forest/view/crystalsong-forest-4.jpg",
+            "/media/crystalsong-forest/view/crystalsong-forest-5.jpg"
+        ],
+        "music": [
+            "/media/crystalsong-forest/music/crystalsong-forest-music-1.ogg",
+            "/media/crystalsong-forest/music/crystalsong-forest-music-2.ogg",
+            "/media/crystalsong-forest/music/crystalsong-forest-music-3.ogg",
+            "/media/crystalsong-forest/music/crystalsong-forest-music-4.ogg"
+        ]
+    },
+    {
+        "name": "nagrand",
+        "preview": [
+            "/media/nagrand/preview/nagrand-1.jpg",
+            "/media/nagrand/preview/nagrand-2.jpg",
+            "/media/nagrand/preview/nagrand-3.jpg",
+            "/media/nagrand/preview/nagrand-4.jpg",
+            "/media/nagrand/preview/nagrand-5.jpg"
+        ],
+        "view": [
+            "/media/nagrand/view/nagrand-1.jpg",
+            "/media/nagrand/view/nagrand-2.jpg",
+            "/media/nagrand/view/nagrand-3.jpg",
+            "/media/nagrand/view/nagrand-4.jpg",
+            "/media/nagrand/view/nagrand-5.jpg"
+        ],
+        "music": [
+            "/media/nagrand/music/nagrand-music-1.ogg",
+            "/media/nagrand/music/nagrand-music-2.ogg",
+            "/media/nagrand/music/nagrand-music-3.ogg",
+            "/media/nagrand/music/nagrand-music-4.ogg"
+        ]
+    },
+    {
+        "name": "grizzly-hills",
+        "preview": [
+            "/media/grizzly-hills/preview/grizzly-hills-1.jpg",
+            "/media/grizzly-hills/preview/grizzly-hills-2.jpg",
+            "/media/grizzly-hills/preview/grizzly-hills-3.jpg",
+            "/media/grizzly-hills/preview/grizzly-hills-4.jpg",
+            "/media/grizzly-hills/preview/grizzly-hills-5.jpg",
+            "/media/grizzly-hills/preview/grizzly-hills-6.jpg",
+            "/media/grizzly-hills/preview/grizzly-hills-7.jpg",
+            "/media/grizzly-hills/preview/grizzly-hills-8.jpg",
+            "/media/grizzly-hills/preview/grizzly-hills-9.jpg",
+            "/media/grizzly-hills/preview/grizzly-hills-10.jpg",
+            "/media/grizzly-hills/preview/grizzly-hills-11.jpg",
+            "/media/grizzly-hills/preview/grizzly-hills-12.jpg"
+        ],
+        "view": [
+            "/media/grizzly-hills/view/grizzly-hills-1.jpg",
+            "/media/grizzly-hills/view/grizzly-hills-2.jpg",
+            "/media/grizzly-hills/view/grizzly-hills-3.jpg",
+            "/media/grizzly-hills/view/grizzly-hills-4.jpg",
+            "/media/grizzly-hills/view/grizzly-hills-5.jpg",
+            "/media/grizzly-hills/view/grizzly-hills-6.jpg",
+            "/media/grizzly-hills/view/grizzly-hills-7.jpg",
+            "/media/grizzly-hills/view/grizzly-hills-8.jpg",
+            "/media/grizzly-hills/view/grizzly-hills-9.jpg",
+            "/media/grizzly-hills/view/grizzly-hills-10.jpg",
+            "/media/grizzly-hills/view/grizzly-hills-11.jpg",
+            "/media/grizzly-hills/view/grizzly-hills-12.jpg"
+        ],
+        "music": [
+            "/media/grizzly-hills/music/grizzly-hills-1.ogg",
+            "/media/grizzly-hills/music/grizzly-hills-2.ogg"
+        ]
+    },
+    {
+        "name": "boralus",
+        "preview": [
+            "/media/boralus/preview/boralus-1.jpg",
+            "/media/boralus/preview/boralus-2.jpg",
+            "/media/boralus/preview/boralus-3.jpg",
+            "/media/boralus/preview/boralus-4.jpg"
+        ],
+        "view": [
+            "/media/boralus/view/boralus-1.jpg",
+            "/media/boralus/view/boralus-2.jpg",
+            "/media/boralus/view/boralus-3.jpg",
+            "/media/boralus/view/boralus-4.jpg"
+        ],
+        "music": [
+            "/media/boralus/music/boralus-1.ogg",
+            "/media/boralus/music/boralus-2.ogg",
+            "/media/boralus/music/boralus-3.ogg",
+            "/media/boralus/music/boralus-4.ogg",
+            "/media/boralus/music/boralus-5.ogg",
+            "/media/boralus/music/boralus-6.ogg",
+            "/media/boralus/music/boralus-7.ogg",
+            "/media/boralus/music/boralus-8.ogg",
+            "/media/boralus/music/boralus-9.ogg",
+            "/media/boralus/music/boralus-10.ogg"
+        ]
+    }
+]

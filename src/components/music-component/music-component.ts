@@ -1,6 +1,5 @@
-import * as React from 'react';
-import { useEffect, useMemo } from 'react';
-import { randomNumber, soundLoad, UI_MUSIC_VOLUME } from '../../utils';
+import { useEffect } from 'react';
+import { randomNumber } from '../../utils';
 import Sound from '../../modules/sound';
 
 interface Props {
@@ -9,40 +8,23 @@ interface Props {
     setCurrentPlaying: (value: Sound | undefined) => void;
 }
 
-/* eslint-disable no-param-reassign */
-export const MusicComponent: React.FC<Props> = ({
-    music,
-    setPlaying,
-    setCurrentPlaying,
-}: Props) => {
-    const musicArray = useMemo(() => music.map((sound) => soundLoad(sound, UI_MUSIC_VOLUME)), [
-        music,
-    ]);
-
+export function MusicComponent({ music, setPlaying, setCurrentPlaying }: Props) {
     useEffect(() => {
-        musicArray.forEach((sound) => {
-            sound.audio.onplay = () => {
-                setPlaying(true);
-                setCurrentPlaying(sound);
-            };
-            sound.audio.onended = () => {
-                musicArray[randomNumber(0, musicArray.length)].playMusic();
-            };
-        });
-        setCurrentPlaying(musicArray[randomNumber(0, musicArray.length)]);
-
-        return () => {
-            musicArray.forEach(({ audio }) => {
-                audio.onplay = null;
-                audio.onended = null;
-                audio.pause();
-                audio.currentTime = 0;
-            });
-            setCurrentPlaying(undefined);
+        let current: Sound | undefined;
+        const next = () => {
+            current?.dispose();
+            if (!music.length) return;
+            current = new Sound(music[randomNumber(0, music.length)]);
+            current.audio.onplay = () => setPlaying(true);
+            current.audio.onpause = () => setPlaying(false);
+            current.audio.onended = next;
+            setPlaying(false);
+            setCurrentPlaying(current);
         };
-    }, [musicArray, setPlaying, setCurrentPlaying]);
-
+        next();
+        return () => {
+            current?.dispose();
+        };
+    }, [music, setPlaying, setCurrentPlaying]);
     return null;
-};
-
-MusicComponent.displayName = 'MusicComponent';
+}

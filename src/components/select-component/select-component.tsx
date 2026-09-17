@@ -7,7 +7,7 @@ import './select-component.scss';
 interface Props {
     children: React.ReactNode;
     options: string[];
-    current: unknown;
+    current: string;
     handleChange: (value: string) => void;
 }
 
@@ -32,27 +32,35 @@ export const SelectComponent: React.FC<Props> = ({
         ) {
             return;
         }
-        setSelectShown(!isSelectShown);
+        setSelectShown(false);
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.keyCode !== 13 && e.keyCode !== 32) {
+        if (e.key !== 'Enter' && e.key !== ' ') {
             return;
         }
+        e.preventDefault();
+        e.stopPropagation();
         setSelectShown(!isSelectShown);
     };
 
     const onItemClick = (itemValue: string) => handleChange(itemValue);
 
     const onItemKeyDown = (e: KeyboardEvent, itemValue: string) => {
-        if (e.keyCode !== 13 && e.keyCode !== 32) {
+        if (e.key !== 'Enter' && e.key !== ' ') {
             return;
         }
+        e.preventDefault();
+        e.stopPropagation();
         handleChange(itemValue);
+        setSelectShown(false);
     };
 
     return (
         <div
+            role="combobox"
+            aria-expanded={isSelectShown}
+            aria-label={String(children)}
             onClick={handleSelectClick}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
@@ -64,10 +72,12 @@ export const SelectComponent: React.FC<Props> = ({
             {children}
             <div className="select-arrow" />
             {isSelectShown && (
-                <div ref={dropDownRef} className="select-drop-down">
-                    {options.map((item, index) => (
+                <div role="listbox" ref={dropDownRef} className="select-drop-down">
+                    {options.map((item) => (
                         <div
-                            key={index}
+                            role="option"
+                            aria-selected={item === current}
+                            key={item}
                             tabIndex={0}
                             onClick={() => onItemClick(item)}
                             onKeyDown={(e) => onItemKeyDown(e, item)}

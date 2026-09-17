@@ -1,0 +1,13 @@
+{
+    "$schema": "./node_modules/oxfmt/configuration_schema.json",
+    "singleQuote": true,
+    "tabWidth": 4,
+    "ignorePatterns": [
+        "pnpm-lock.yaml",
+        "devenv.lock",
+        "next-env.d.ts",
+        "public/**",
+        "screenshots/**",
+        ".next/**"
+    ]
+}

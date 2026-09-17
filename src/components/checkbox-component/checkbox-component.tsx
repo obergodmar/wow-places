@@ -1,36 +1,26 @@
-import * as React from 'react';
-import { KeyboardEvent, useCallback } from 'react';
 import cn from 'classnames';
-
-import { Settings } from '../../settings-context';
-
 import './checkbox-component.scss';
-
 interface Props {
-    handleClick: (option: keyof Settings) => () => void;
-    optionName: keyof Settings;
+    handleClick: () => void;
+    label: string;
     value: boolean;
 }
-
-export const CheckboxComponent: React.FC<Props> = ({ handleClick, optionName, value }: Props) => {
-    const handleKeyDown = useCallback(
-        (option: keyof Settings) => (e: KeyboardEvent) => {
-            if (e.keyCode !== 13 && e.keyCode !== 32) {
-                return;
-            }
-            handleClick(option)();
-        },
-        [handleClick],
-    );
-
+export function CheckboxComponent({ handleClick, label, value }: Props) {
     return (
         <div
+            role="checkbox"
+            aria-label={label}
+            aria-checked={value}
             tabIndex={0}
-            onClick={handleClick(optionName)}
-            onKeyDown={handleKeyDown(optionName)}
+            onClick={handleClick}
+            onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    handleClick();
+                }
+            }}
             className={cn('checkbox', { 'checkbox--checked': value })}
         />
     );
-};
-
-CheckboxComponent.displayName = 'CheckboxComponent';
+}

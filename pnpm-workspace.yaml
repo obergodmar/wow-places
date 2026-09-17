@@ -1,0 +1,6 @@
+allowBuilds:
+    '@parcel/watcher': true
+    sharp: true
+    esbuild: true
+minimumReleaseAgeExclude:
+    - jsdom@30.1.0

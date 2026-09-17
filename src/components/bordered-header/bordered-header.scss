@@ -1,4 +1,4 @@
-@import "../../pages/app/style";
+@use '../../styles/tokens' as *;
 
 $borderWidth: 12px;
 $borderOutset: 8px;

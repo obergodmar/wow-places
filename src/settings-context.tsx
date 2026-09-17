@@ -1,50 +1,27 @@
-import * as React from 'react';
-import { createContext, useState } from 'react';
-
-import ru from './locales/ru.json';
-import en from './locales/en.json';
+import { createContext, useMemo, useState, type ReactNode } from 'react';
+import type en from './locales/en.json';
 
 export interface Settings {
-    language: typeof ru | typeof en;
+    language: typeof en;
     musicVolume: number;
     currentLanguage: string;
     uiLanguage: string[];
     uiSound: boolean;
 }
-
 export interface SettingsContextType {
     settings: Settings;
-    saveSettings?: (value: Settings) => void;
+    saveSettings: (value: Settings) => void;
 }
-
-interface Props {
-    children: React.ReactNode;
+const SettingsContext = createContext<SettingsContextType | null>(null);
+export function SettingsProvider({
+    children,
+    settings,
+}: {
+    children: ReactNode;
     settings: Settings;
+}) {
+    const [currentSettings, saveSettings] = useState(settings);
+    const value = useMemo(() => ({ settings: currentSettings, saveSettings }), [currentSettings]);
+    return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
 }
-
-const defaultSettings: SettingsContextType = {
-    settings: {
-        language: ru,
-        musicVolume: 1.0,
-        currentLanguage: ru['ui.language'],
-        uiLanguage: [ru['ui.language'], en['ui.language']],
-        uiSound: true,
-    },
-};
-const SettingsContext = createContext(defaultSettings);
-
-export const SettingsProvider: React.FC<Props> = ({ children, settings }: Props) => {
-    const [currentSettings, setCurrentSettings] = useState(settings || defaultSettings);
-
-    const saveSettings = (value: Settings) => {
-        setCurrentSettings(value);
-    };
-
-    return (
-        <SettingsContext.Provider value={{ settings: currentSettings, saveSettings }}>
-            {children}
-        </SettingsContext.Provider>
-    );
-};
-
 export default SettingsContext;

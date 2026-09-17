@@ -1,4 +1,7 @@
 import { useContext } from 'react';
-import SettingsContext, { SettingsContextType } from '../settings-context';
-
-export const useSettings = (): SettingsContextType => useContext(SettingsContext);
+import SettingsContext from '../settings-context';
+export function useSettings() {
+    const context = useContext(SettingsContext);
+    if (!context) throw new Error('useSettings requires SettingsProvider');
+    return context;
+}

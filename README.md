@@ -1,17 +1,17 @@
-# World of Warcraft - Best Places (Available [here](https://wow-places.web.app/))
+# World of Warcraft — Best Places
 
-This app tries to parody the interface of the game World of Warcraft. You can choose your favorite place in the game and listen to the music playing in this place.
+Explore iconic World of Warcraft locations with immersive scenery, original music, and a game-inspired interface. Available in English and Russian.
 
-### Keyboard
+[Visit the website](https://wow-places.obergodmar.tech)
 
-* Esc - Open settings
-* Space - Pause/Resume playback
+## Controls
 
-### Screenshots
+- **Esc** — close an open scenery panel or toggle settings.
+- **Space** — pause or resume music when the scene is focused.
+- **Mouse/touch drag** — pan scenery and scroll panels.
 
-* Views
-![Screenshot 1](screenshots/screenshot-1.png)
-* Places
-![Screenshot 2](screenshots/screenshot-2.png)
-* Settings
-![Screenshot 3](screenshots/screenshot-3.png)
+## Screenshots
+
+![Views](screenshots/screenshot-1.png)
+![Places](screenshots/screenshot-2.png)
+![Settings](screenshots/screenshot-3.png)

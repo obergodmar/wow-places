@@ -1,16 +1,16 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import Sound from '../modules/sound';
 import { soundLoad, UI_SOUND_VOLUME } from '../utils';
 
-import PanelOpenAudio from '../assets/audio/panel-open.ogg';
-import PanelCloseAudio from '../assets/audio/panel-close.ogg';
+const PanelOpenAudio = '/media/audio/panel-open.ogg';
+const PanelCloseAudio = '/media/audio/panel-close.ogg';
 
-import SettingsOpenAudio from '../assets/audio/menu-open.ogg';
-import SettingsCloseAudio from '../assets/audio/menu-close.ogg';
+const SettingsOpenAudio = '/media/audio/menu-open.ogg';
+const SettingsCloseAudio = '/media/audio/menu-close.ogg';
 
-import CheckBoxOnAudio from '../assets/audio/check-box-on.ogg';
-import CheckBoxOffAudio from '../assets/audio/check-box-off.ogg';
+const CheckBoxOnAudio = '/media/audio/check-box-on.ogg';
+const CheckBoxOffAudio = '/media/audio/check-box-off.ogg';
 
 type uiSoundType = {
     panelOpenSound: Sound;
@@ -28,6 +28,27 @@ export const useUiSound = (): uiSoundType => {
     const settingsCloseSound = useMemo(() => soundLoad(SettingsCloseAudio, UI_SOUND_VOLUME), []);
     const checkboxOnSound = useMemo(() => soundLoad(CheckBoxOnAudio, UI_SOUND_VOLUME), []);
     const checkboxOffSound = useMemo(() => soundLoad(CheckBoxOffAudio, UI_SOUND_VOLUME), []);
+
+    useEffect(
+        () => () => {
+            [
+                panelOpenSound,
+                panelCloseSound,
+                settingsOpenSound,
+                settingsCloseSound,
+                checkboxOnSound,
+                checkboxOffSound,
+            ].forEach((sound) => sound.pause());
+        },
+        [
+            panelOpenSound,
+            panelCloseSound,
+            settingsOpenSound,
+            settingsCloseSound,
+            checkboxOnSound,
+            checkboxOffSound,
+        ],
+    );
 
     return {
         panelOpenSound,

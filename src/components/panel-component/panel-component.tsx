@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { forwardRef, MouseEvent, useCallback, useRef } from 'react';
+import { forwardRef, MouseEvent, useCallback } from 'react';
 import cn from 'classnames';
 
 import { usePanelScroll, useSettings } from '../../hooks';
@@ -21,10 +21,7 @@ export const PanelComponent = forwardRef<HTMLButtonElement, Props>(
             settings: { language },
         } = useSettings();
 
-        const panel = useRef<HTMLDivElement>(null);
-
-        // TODO: Keyboard place input
-        const { panelProps } = usePanelScroll({ orientation, itemsCount, panel, isShown });
+        const { panelProps, panelStyle } = usePanelScroll({ orientation, itemsCount, isShown });
 
         const handleClick = useCallback(
             (event: MouseEvent) => {
@@ -41,7 +38,7 @@ export const PanelComponent = forwardRef<HTMLButtonElement, Props>(
                     [`panel--${orientation}--shown`]: isShown,
                 })}
             >
-                <div ref={panel} className="panel-content">
+                <div style={panelStyle} className="panel-content">
                     {isShown && children}
                 </div>
                 <button onClick={handleClick} ref={ref}>

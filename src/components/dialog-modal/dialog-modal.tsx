@@ -18,9 +18,11 @@ export const DialogModal = memo<Props>(({ text, title, offsetTop, isShown, onClo
     const { step, isStepShown } = useDialogStep({ text });
     const handleKeyDown = useCallback(
         (e: KeyboardEvent) => {
-            if (e.keyCode !== 13 && e.keyCode !== 32) {
+            if (e.key !== 'Enter' && e.key !== ' ') {
                 return;
             }
+            e.preventDefault();
+            e.stopPropagation();
             onClose();
         },
         [onClose],
@@ -49,6 +51,8 @@ export const DialogModal = memo<Props>(({ text, title, offsetTop, isShown, onClo
                 </div>
             </div>
             <div
+                role="button"
+                aria-label="Close help"
                 tabIndex={0}
                 onClick={onClose}
                 onKeyDown={handleKeyDown}

@@ -1,0 +1,24 @@
+@forward '../assets/assets';
+
+$hoverColor: rgba(173, 154, 32, 0.75);
+$hoverBox: 0 0 4px 2px $hoverColor;
+$previewHeight: 180px;
+$previewWidth: 320px;
+$font: 'Arial Narrow';
+$fontMorpheus: 'Morpheus';
+$fontSpacing: 1.2px;
+$fontSize: 14px;
+$fontShadow:
+    -1px -1px 1px #000,
+    1px -1px 1px #000,
+    -1px 1px 1px #000,
+    1px 1px 1px #000;
+$buttonSmallWidth: 78px;
+$buttonSmallHeight: 21px;
+$buttonWidth: 125px;
+$buttonHeight: 20px;
+$fontColor: #eec511;
+$fontColorWhite: #fff;
+$transitionDuration: 500ms;
+$transitionType: cubic-bezier(1, 0.35, 0.57, 1);
+$settingsBackground: rgba(0, 0, 0, 0.6);

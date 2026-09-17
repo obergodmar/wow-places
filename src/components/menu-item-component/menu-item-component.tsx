@@ -18,9 +18,11 @@ export enum MenuItems {
 export const MenuItemComponent: React.FC<Props> = ({ isActive, handleClick, type }: Props) => {
     const handleKeyDown = useCallback(
         (e: KeyboardEvent) => {
-            if (e.keyCode !== 13 && e.keyCode !== 32) {
+            if (e.key !== 'Enter' && e.key !== ' ') {
                 return;
             }
+            e.preventDefault();
+            e.stopPropagation();
             handleClick();
         },
         [handleClick],
@@ -28,6 +30,9 @@ export const MenuItemComponent: React.FC<Props> = ({ isActive, handleClick, type
 
     return (
         <div
+            role="button"
+            aria-label={type}
+            aria-pressed={isActive}
             tabIndex={0}
             onClick={handleClick}
             onKeyDown={handleKeyDown}
@@ -36,4 +41,4 @@ export const MenuItemComponent: React.FC<Props> = ({ isActive, handleClick, type
     );
 };
 
-MenuItemComponent.displayName = 'MainMenuComponent';
+MenuItemComponent.displayName = 'MenuItemComponent';

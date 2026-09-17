@@ -1,160 +1,68 @@
-import * as React from 'react';
-import { KeyboardEvent, useCallback, useEffect, useRef, useState, WheelEvent } from 'react';
-
+import { useRef, type KeyboardEvent, type PointerEvent } from 'react';
+import { useSettings } from '../../hooks/use-settings';
 import './range-component.scss';
 
 interface Props {
     handleChange: (value: number) => void;
-    defaultValue: number;
+    value: number;
 }
-
 const MAX = 55;
 
-export const RangeComponent: React.FC<Props> = ({ handleChange, defaultValue }: Props) => {
-    const [isPressed, setPressed] = useState(false);
-    const [position, setPosition] = useState(defaultValue * MAX);
-
-    const stick = useRef<HTMLDivElement>(null);
-
-    const handleFocus = useCallback(() => setPressed(true), []);
-    const handleFree = useCallback(() => setPressed(false), []);
-
-    const limiter = useCallback((value: number, width: number) => {
-        let diff = value;
-        if (diff > width - 35) {
-            diff = MAX;
-        } else if (diff < 0) {
-            diff = 0;
+export function RangeComponent({ handleChange, value }: Props) {
+    const dragging = useRef(false);
+    const {
+        settings: { language },
+    } = useSettings();
+    const update = (position: number) => handleChange(Math.max(0, Math.min(MAX, position)) / MAX);
+    const point = (event: PointerEvent<HTMLDivElement>) => {
+        update(event.clientX - event.currentTarget.getBoundingClientRect().left - 20);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+        const position = value * MAX;
+        const next = { ArrowLeft: position - 5, ArrowRight: position + 5, Home: 0, End: MAX }[
+            event.key
+        ];
+        if (next !== undefined) {
+            event.preventDefault();
+            event.stopPropagation();
+            update(next);
         }
-        return diff;
-    }, []);
-
-    const handleKeyDown = useCallback(
-        (e: KeyboardEvent) => {
-            if (!stick.current || !stick.current.parentNode) {
-                return;
-            }
-
-            const handleChangePosition = (value: number): void => {
-                setPosition(value);
-                handleChange(value / MAX);
-            };
-
-            const { width } = (stick.current.parentNode as HTMLDivElement).getBoundingClientRect();
-            switch (e.keyCode) {
-                case 37:
-                    handleChangePosition(limiter(position - 5, width));
-                    break;
-                case 39:
-                    handleChangePosition(limiter(position + 5, width));
-                    break;
-                default:
-                    break;
-            }
-        },
-        [handleChange, limiter, position, stick],
-    );
-
-    const handlePoint = useCallback(
-        (e: React.MouseEvent | MouseEvent) => {
-            if (!stick.current || !stick.current.parentNode) {
-                return;
-            }
-            const { width, left } = (stick.current
-                .parentNode as HTMLDivElement).getBoundingClientRect();
-            const { clientX } = e;
-            const value = clientX - left - 20;
-            const diff = limiter(value, width);
-
-            setPosition(diff);
-            handleChange(diff / MAX);
-        },
-        [limiter, handleChange, stick],
-    );
-
-    const handleMouseMove = useCallback(
-        (e: MouseEvent) => {
-            if (!isPressed) {
-                return;
-            }
-            handlePoint(e);
-        },
-        [isPressed, handlePoint],
-    );
-
-    const handleTouchMove = useCallback(
-        (e: TouchEvent) => {
-            if (!isPressed) {
-                return;
-            }
-            const { touches } = e;
-            const { clientX } = touches[0];
-
-            if (!stick.current || !stick.current.parentNode) {
-                return;
-            }
-            const { width, left } = (stick.current
-                .parentNode as HTMLDivElement).getBoundingClientRect();
-
-            const value = clientX - left - 20;
-            const diff = limiter(value, width);
-
-            setPosition(diff);
-            handleChange(diff / MAX);
-        },
-        [isPressed, limiter, handleChange, stick],
-    );
-
-    const handleScroll = useCallback(
-        (e: WheelEvent) => {
-            if (!stick.current || !stick.current.parentNode) {
-                return;
-            }
-            const range = stick.current.parentNode as HTMLDivElement;
-            const { width } = range.getBoundingClientRect();
-            range.focus();
-            const { deltaY } = e;
-            const value = position + (deltaY > 0 ? -5 : 5);
-            const diff = limiter(value, width);
-
-            setPosition(diff);
-            handleChange(diff / MAX);
-        },
-        [handleChange, limiter, position, stick],
-    );
-
-    useEffect(() => {
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('mouseup', handleFree);
-        window.addEventListener('touchmove', handleTouchMove);
-        window.addEventListener('touchend', handleFree);
-        return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('mouseup', handleFree);
-            window.removeEventListener('touchmove', handleTouchMove);
-            window.removeEventListener('touchend', handleFree);
-        };
-    }, [handleMouseMove, handleTouchMove, handleFree]);
-
+    };
     return (
         <div
+            role="slider"
+            aria-label={language['ui.musicVolume']}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(value * 100)}
             tabIndex={0}
-            onKeyDown={handleKeyDown}
-            onMouseDown={handleFocus}
-            onClick={handlePoint}
-            onTouchStart={handleFocus}
-            onWheel={handleScroll}
+            onKeyDown={onKeyDown}
+            onPointerDown={(event) => {
+                dragging.current = true;
+                event.currentTarget.setPointerCapture(event.pointerId);
+                event.currentTarget.focus();
+                point(event);
+            }}
+            onPointerMove={(event) => {
+                if (dragging.current) point(event);
+            }}
+            onPointerUp={() => {
+                dragging.current = false;
+            }}
+            onPointerCancel={() => {
+                dragging.current = false;
+            }}
+            onLostPointerCapture={() => {
+                dragging.current = false;
+            }}
+            onWheel={(event) => {
+                event.currentTarget.focus();
+                update(value * MAX + (event.deltaY > 0 ? -5 : 5));
+            }}
             className="range"
+            style={{ touchAction: 'none' }}
         >
-            <div
-                ref={stick}
-                style={{
-                    left: `${position}px`,
-                }}
-                className="range-stick"
-            />
+            <div style={{ left: `${value * MAX}px` }} className="range-stick" />
         </div>
     );
-};
-
-RangeComponent.displayName = 'RangeComponent';
+}

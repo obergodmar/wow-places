@@ -70,6 +70,7 @@ export const useViewScroll = (): ViewScrollType => {
         window.addEventListener('resize', handleResize);
         return () => {
             window.removeEventListener('resize', handleResize);
+            handleResize.cancel();
         };
     }, [handleResize]);
 

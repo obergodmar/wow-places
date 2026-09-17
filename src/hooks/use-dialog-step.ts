@@ -1,49 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ANIMATION_DURATION, DIALOG_STEP_DURATION } from '../utils';
-
-interface dialogStepType {
-    step: string;
-    isStepShown: boolean;
-}
-
-interface Props {
-    text: string[];
-}
-
-export const useDialogStep = ({ text }: Props): dialogStepType => {
-    const [stepsCount] = useState(text.length);
+export const useDialogStep = ({ text }: { text: string[] }) => {
     const [step, setStep] = useState(0);
     const [isStepShown, setStepShown] = useState(true);
-    const stepIntervalRef = useRef<NodeJS.Timeout | null>(null);
-    const stepShownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
     useEffect(() => {
-        stepIntervalRef.current = setInterval(() => {
-            const nextStep = step + 1;
-            if (nextStep === stepsCount && stepIntervalRef.current) {
-                clearInterval(stepIntervalRef.current);
-            }
-
+        if (step >= text.length - 1) return;
+        let fade: ReturnType<typeof setTimeout>;
+        const timer = setTimeout(() => {
             setStepShown(false);
-            stepShownTimeoutRef.current = setTimeout(() => {
-                setStep(nextStep);
+            fade = setTimeout(() => {
+                setStep((value) => value + 1);
                 setStepShown(true);
             }, ANIMATION_DURATION / 2);
         }, DIALOG_STEP_DURATION);
-
         return () => {
-            if (stepIntervalRef.current) {
-                clearInterval(stepIntervalRef.current);
-            }
-
-            if (stepShownTimeoutRef.current) {
-                clearTimeout(stepShownTimeoutRef.current);
-            }
+            clearTimeout(timer);
+            clearTimeout(fade);
         };
-    }, [step, stepsCount]);
-
-    return {
-        step: text[step],
-        isStepShown,
-    };
+    }, [step, text.length]);
+    return { step: text[Math.min(step, text.length - 1)] ?? '', isStepShown };
 };

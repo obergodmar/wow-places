@@ -1,4 +1,5 @@
-@import "../../pages/app/style";
+@use 'sass:math';
+@use '../../styles/tokens' as *;
 
 $previewBorderWidth: 10px;
 $plugSize: 90px;
@@ -17,7 +18,7 @@ $previewNameHeight: 25px;
     background-size: $previewWidth $previewHeight;
     border: $previewBorderWidth double $fontColor;
     border-image: $border 12 12 11 12;
-    border-image-outset: $previewBorderWidth / 2;
+    border-image-outset: math.div($previewBorderWidth, 2);
     border-image-repeat: stretch stretch;
     cursor: $cursorInteract, auto;
     opacity: 1;
@@ -37,7 +38,7 @@ $previewNameHeight: 25px;
     }
 
     &--loading {
-        opacity: .4;
+        opacity: 0.4;
     }
 
     &:hover {

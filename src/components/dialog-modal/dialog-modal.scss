@@ -1,4 +1,5 @@
-@import "../../pages/app/style";
+@use 'sass:math';
+@use '../../styles/tokens' as *;
 
 .dialog-modal {
     position: absolute;
@@ -8,7 +9,9 @@
     border-radius: 5px;
     transform: translate(-50%, -100%);
     opacity: 0;
-    transition: top $transitionDuration $transitionType, opacity $transitionDuration $transitionType;
+    transition:
+        top $transitionDuration $transitionType,
+        opacity $transitionDuration $transitionType;
 
     &_shown {
         opacity: 1;
@@ -35,17 +38,17 @@
     &-image {
         width: 110px;
         height: 110px;
-        background-image: url("../../assets/dinastro.gif");
+        background-image: url('/media/dinastro.gif');
         background-size: 120px 120px;
-        box-shadow: inset 0 0 16px 0 rgba(0, 0, 0, .9);
+        box-shadow: inset 0 0 16px 0 rgba(0, 0, 0, 0.9);
     }
 
     &-content {
         width: 400px;
         padding: 5px 20px;
-        background-color: rgba(0, 0, 0, .7);
+        background-color: rgba(0, 0, 0, 0.7);
         border-radius: 5px;
-        box-shadow: 0 0 20px 5px rgba(0, 0, 0, .9);
+        box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.9);
 
         &__title {
             color: $fontColor;
@@ -62,7 +65,7 @@
             line-height: 1.4;
             text-shadow: $fontShadow;
             opacity: 0;
-            transition: opacity $transitionDuration / 2 $transitionType;
+            transition: opacity math.div($transitionDuration, 2) $transitionType;
 
             &_shown {
                 opacity: 1;

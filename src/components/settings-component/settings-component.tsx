@@ -1,127 +1,77 @@
-import * as React from 'react';
-
+import type { ReactNode } from 'react';
 import ru from '../../locales/ru.json';
 import en from '../../locales/en.json';
 import { useSettings } from '../../hooks';
-import { Settings } from '../../settings-context';
 import { BorderedHeader, CheckboxComponent, RangeComponent, SelectComponent } from '..';
-
 import './settings-component.scss';
 
 interface Props {
     closeSettings: () => void;
-    checkboxOnSoundPlay: (volume?: number) => void;
-    checkboxOffSoundPlay: (volume?: number) => void;
+    checkboxOnSoundPlay: () => void;
+    checkboxOffSoundPlay: () => void;
 }
-
-/* eslint-disable no-unused-expressions */
-export const SettingsComponent: React.FC<Props> = ({
+export function SettingsComponent({
     closeSettings,
     checkboxOnSoundPlay,
     checkboxOffSoundPlay,
-}: Props) => {
+}: Props) {
     const { settings, saveSettings } = useSettings();
-
-    const handleCheckboxClick = (option: keyof Settings) => () => {
-        saveSettings?.({ ...settings, [option]: !settings[option] });
-        if (!settings.uiSound) {
-            return;
-        }
-        if (settings[option]) {
-            checkboxOffSoundPlay();
-        } else {
-            checkboxOnSoundPlay();
-        }
+    const { language } = settings;
+    const changeLanguage = (name: string) => {
+        if (name === settings.currentLanguage) return;
+        saveSettings({
+            ...settings,
+            language: name === ru['ui.language'] ? ru : en,
+            currentLanguage: name,
+        });
+        if (settings.uiSound) checkboxOnSoundPlay();
     };
-
-    const handleChangeLanguage = (nextLanguage: string) => {
-        if (settings.currentLanguage === nextLanguage) {
-            return;
-        }
-        if (nextLanguage === ru['ui.language']) {
-            saveSettings?.({
-                ...settings,
-                language: ru,
-                currentLanguage: nextLanguage,
-            });
-        } else {
-            saveSettings?.({
-                ...settings,
-                language: en,
-                currentLanguage: nextLanguage,
-            });
-        }
-        if (!settings.uiSound) {
-            return;
-        }
-        checkboxOnSoundPlay();
+    const toggleSound = () => {
+        saveSettings({ ...settings, uiSound: !settings.uiSound });
+        if (settings.uiSound) checkboxOffSoundPlay();
     };
-
-    const handleChangeRange = (value: number) => {
-        checkboxOnSoundPlay();
-        saveSettings?.({ ...settings, musicVolume: value });
+    const changeVolume = (musicVolume: number) => {
+        if (settings.uiSound) checkboxOnSoundPlay();
+        saveSettings({ ...settings, musicVolume });
     };
-
-    const chooseOption = (option: keyof Settings): React.ReactNode => {
-        const { language } = settings;
-        switch (typeof settings[option]) {
-            case 'boolean':
-                return (
-                    <CheckboxComponent
-                        handleClick={handleCheckboxClick}
-                        optionName={option}
-                        value={settings[option] as boolean}
-                    />
-                );
-            case 'object':
-                return (
-                    <SelectComponent
-                        handleChange={handleChangeLanguage}
-                        current={language['ui.language']}
-                        options={settings[option] as []}
-                    >
-                        {language['ui.language']}
-                    </SelectComponent>
-                );
-            case 'number':
-                return (
-                    <RangeComponent
-                        defaultValue={settings[option] as number}
-                        handleChange={handleChangeRange}
-                    />
-                );
-
-            default:
-                return null;
-        }
-    };
-
-    const renderOption = (option: keyof Settings) => {
-        const { language } = settings;
-        const valueName = `ui.${option}` as keyof typeof language;
-        return (
-            <div className="settings-option">
-                <div className="settings-option-name">{language[valueName]}</div>
-                {chooseOption(option)}
-            </div>
-        );
-    };
-
+    const row = (label: string, control: ReactNode) => (
+        <div className="settings-option">
+            <div className="settings-option-name">{label}</div>
+            {control}
+        </div>
+    );
     return (
         <div className="settings">
             <div className="settings-header">
-                <BorderedHeader>{settings.language['ui.main-menu']}</BorderedHeader>
+                <BorderedHeader>{language['ui.main-menu']}</BorderedHeader>
             </div>
             <div className="settings-content">
-                {renderOption('uiLanguage')}
-                {renderOption('musicVolume')}
-                {renderOption('uiSound')}
+                {row(
+                    language['ui.uiLanguage'],
+                    <SelectComponent
+                        handleChange={changeLanguage}
+                        current={settings.currentLanguage}
+                        options={settings.uiLanguage}
+                    >
+                        {settings.currentLanguage}
+                    </SelectComponent>,
+                )}
+                {row(
+                    language['ui.musicVolume'],
+                    <RangeComponent value={settings.musicVolume} handleChange={changeVolume} />,
+                )}
+                {row(
+                    language['ui.uiSound'],
+                    <CheckboxComponent
+                        label={language['ui.uiSound']}
+                        value={settings.uiSound}
+                        handleClick={toggleSound}
+                    />,
+                )}
             </div>
             <button className="settings-button" onClick={closeSettings}>
-                {settings.language['ui.button.close']}
+                {language['ui.button.close']}
             </button>
         </div>
     );
-};
-
-SettingsComponent.displayName = 'SettingsComponent';
+}

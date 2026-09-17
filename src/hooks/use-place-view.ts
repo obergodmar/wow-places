@@ -1,138 +1,81 @@
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-
-import Sound from '../modules/sound';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import type Sound from '../modules/sound';
 import { useSettings } from './use-settings';
-import places from '../assets';
-import { delay } from '../utils';
-
-type placeViewType = {
-    isLoading: boolean;
-    activePlace: number;
-    activeView: number;
-    isLeftPanelShown: boolean;
-    isBottomPanelShown: boolean;
-    hideLeftPanel: () => void;
-    hideBottomPanel: () => void;
-    onLeftPanelClick: (value: number) => void;
-    onBottomPanelClick: (value: number) => void;
-    closePanels: () => void;
-};
+import { resolvePlace, type Place } from '../domain/places';
+import { LOADING_DURATION } from '../utils';
 
 interface Props {
+    places: Place[];
     panelOpenSound: Sound;
     panelCloseSound: Sound;
 }
 
-export const usePlaceView = ({ panelOpenSound, panelCloseSound }: Props): placeViewType => {
+export const usePlaceView = ({ places, panelOpenSound, panelCloseSound }: Props) => {
     const {
         settings: { language, uiSound },
     } = useSettings();
-
-    const { placeName, viewNumber } = useParams();
-    const { currentPlace, currentView } = useMemo(() => {
-        let placeIndex = places.findIndex((place) => place.name === placeName);
-        placeIndex = placeIndex === -1 ? 0 : placeIndex;
-        let viewIndex = Number(viewNumber) || 0;
-        viewIndex =
-            places[placeIndex].view.length > viewIndex
-                ? viewIndex
-                : places[placeIndex].view.length - 1;
-        return {
-            currentPlace: placeIndex,
-            currentView: viewIndex,
-        };
-    }, [placeName, viewNumber]);
-
-    const history = useHistory();
-
+    const pathname = usePathname();
+    const [, placeName, viewNumber] = pathname.split('/');
+    const { activePlace, activeView } = resolvePlace(places, placeName, viewNumber);
     const [isLoading, setLoading] = useState(false);
+    const loadingRef = useRef(false);
+    const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const [isLeftPanelShown, setLeftPanelShown] = useState(false);
     const [isBottomPanelShown, setBottomPanelShown] = useState(false);
-    const [activePlace, setActivePlace] = useState(currentPlace);
-    const [activeView, setActiveView] = useState(currentView);
 
-    const handleUiSoundPanels = useCallback(
-        (isOpponentOpened: boolean, currentPanel: boolean) => {
-            if (!uiSound) {
-                return;
-            }
-
-            if (isOpponentOpened) {
-                panelCloseSound.playSound();
-            }
-
-            if (currentPanel) {
-                panelCloseSound.playSound();
-            } else {
-                panelOpenSound.playSound();
-            }
+    useEffect(
+        () => () => {
+            if (timer.current) clearTimeout(timer.current);
         },
-        [panelCloseSound, panelOpenSound, uiSound],
+        [],
     );
+    useEffect(() => {
+        document.title =
+            language[`place.${places[activePlace].name}` as keyof typeof language] ??
+            places[activePlace].name;
+    }, [activePlace, places, language]);
 
-    const hideLeftPanel = useCallback(() => {
-        handleUiSoundPanels(isBottomPanelShown, isLeftPanelShown);
-        setBottomPanelShown(false);
-        setLeftPanelShown(!isLeftPanelShown);
-    }, [handleUiSoundPanels, isBottomPanelShown, isLeftPanelShown]);
-
-    const hideBottomPanel = useCallback(() => {
-        handleUiSoundPanels(isLeftPanelShown, isBottomPanelShown);
-        setLeftPanelShown(false);
-        setBottomPanelShown(!isBottomPanelShown);
-    }, [handleUiSoundPanels, isBottomPanelShown, isLeftPanelShown]);
-
-    const delayedChange = useCallback(
-        (fn: (value: number) => void, value: number) => {
-            if (isLoading) {
-                return;
-            }
-            fn(value);
+    const togglePanel = (side: 'left' | 'bottom') => {
+        const wasShown = side === 'left' ? isLeftPanelShown : isBottomPanelShown;
+        if (uiSound) {
+            if (isLeftPanelShown || isBottomPanelShown) panelCloseSound.playSound();
+            if (!wasShown) panelOpenSound.playSound();
+        }
+        setLeftPanelShown(side === 'left' && !wasShown);
+        setBottomPanelShown(side === 'bottom' && !wasShown);
+    };
+    const navigate = useCallback(
+        (place: number, view: number) => {
+            if (loadingRef.current || !places[place]?.view[view]) return;
+            const nextPath = `/${places[place].name}/${view}`;
+            if (nextPath === pathname) return;
+            loadingRef.current = true;
             setLoading(true);
-            delay().then(() => {
+            // Next integrates native history with usePathname; no server roundtrip for a view change.
+            window.history.pushState(null, '', nextPath);
+            timer.current = setTimeout(() => {
+                loadingRef.current = false;
                 setLoading(false);
-            });
+            }, LOADING_DURATION);
         },
-        [isLoading],
+        [pathname, places],
     );
-
-    const onLeftPanelClick = useCallback(
-        (value: number) => {
-            delayedChange(setActivePlace, value);
-            setActiveView(0);
-        },
-        [delayedChange],
-    );
-
-    const onBottomPanelClick = useCallback(
-        (value: number) => {
-            delayedChange(setActiveView, value);
-        },
-        [delayedChange],
-    );
-
-    useLayoutEffect(() => {
-        history.push(`/${places[activePlace].name}/${activeView}`);
-        document.title = language[`place.${places[activePlace].name}` as keyof typeof language];
-    }, [activePlace, activeView, language, history]);
-
-    const closePanels = useCallback(() => {
-        handleUiSoundPanels(false, isLeftPanelShown || isBottomPanelShown);
+    const closePanels = () => {
+        if (uiSound && (isLeftPanelShown || isBottomPanelShown)) panelCloseSound.playSound();
         setLeftPanelShown(false);
         setBottomPanelShown(false);
-    }, [handleUiSoundPanels, isBottomPanelShown, isLeftPanelShown]);
-
+    };
     return {
         isLoading,
         activePlace,
         activeView,
         isLeftPanelShown,
         isBottomPanelShown,
-        hideLeftPanel,
-        hideBottomPanel,
-        onLeftPanelClick,
-        onBottomPanelClick,
+        hideLeftPanel: () => togglePanel('left'),
+        hideBottomPanel: () => togglePanel('bottom'),
+        onLeftPanelClick: (value: number) => navigate(value, 0),
+        onBottomPanelClick: (value: number) => navigate(activePlace, value),
         closePanels,
     };
 };

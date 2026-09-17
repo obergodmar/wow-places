@@ -1,4 +1,4 @@
-@import "../../pages/app/style";
+@use '../../styles/tokens' as *;
 
 $menuItemWidth: 32px;
 $menuItemHeight: 41px;
