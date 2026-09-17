@@ -18,7 +18,8 @@ $borderOutset: 8px;
     text-shadow: $fontShadow;
     background-image: $backgroundTexture;
     background-repeat: repeat;
-    border: $borderWidth double $fontColor;
+    // A double border obscures the label before the border image is available.
+    border: $borderWidth solid #252522;
     border-image: $border 15 15 15 15 fill;
     border-image-outset: $borderOutset;
     border-image-repeat: stretch stretch;

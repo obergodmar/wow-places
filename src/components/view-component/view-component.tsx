@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import cn from 'classnames';
 
 import { Background } from '../../assets';
-import { ANIMATION_DURATION } from '../../utils';
 import { useViewScroll } from '../../hooks';
 
 import './view-component.scss';
@@ -20,14 +19,11 @@ export const ViewComponent: React.FC<Props> = ({ src }: Props) => {
 
     useEffect(() => {
         const image = new Image();
-        const timer = setTimeout(() => {
-            image.onload = () => {
-                setImageSrc(src);
-            };
-            image.src = src;
-        }, ANIMATION_DURATION);
+        image.onload = () => {
+            setImageSrc(src);
+        };
+        image.src = src;
         return () => {
-            clearTimeout(timer);
             image.onload = null;
         };
     }, [src]);

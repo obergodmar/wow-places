@@ -1,16 +1,17 @@
 import { useEffect, useMemo } from 'react';
 
 import Sound from '../modules/sound';
+import { assetUrl } from '../assets/urls';
 import { soundLoad, UI_SOUND_VOLUME } from '../utils';
 
-const PanelOpenAudio = '/media/audio/panel-open.ogg';
-const PanelCloseAudio = '/media/audio/panel-close.ogg';
+const PanelOpenAudio = assetUrl('/media/audio/panel-open.ogg');
+const PanelCloseAudio = assetUrl('/media/audio/panel-close.ogg');
 
-const SettingsOpenAudio = '/media/audio/menu-open.ogg';
-const SettingsCloseAudio = '/media/audio/menu-close.ogg';
+const SettingsOpenAudio = assetUrl('/media/audio/menu-open.ogg');
+const SettingsCloseAudio = assetUrl('/media/audio/menu-close.ogg');
 
-const CheckBoxOnAudio = '/media/audio/check-box-on.ogg';
-const CheckBoxOffAudio = '/media/audio/check-box-off.ogg';
+const CheckBoxOnAudio = assetUrl('/media/audio/check-box-on.ogg');
+const CheckBoxOffAudio = assetUrl('/media/audio/check-box-off.ogg');
 
 type uiSoundType = {
     panelOpenSound: Sound;

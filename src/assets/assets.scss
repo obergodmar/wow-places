@@ -1,32 +1,46 @@
-$backgroundTexture: url('/media/ui/backgroundTexture.png');
-$borderRight: url('/media/ui/borderRight.png');
-$borderTop: url('/media/ui/borderTop.png');
-$panelBackground: url('/media/ui/panelBackground.png');
-$border: url('/media/ui/border.png');
-$dialogBorder: url('/media/ui/dialogBorder.png');
-$dialogCloseButtonUp: url('/media/ui/dialogCloseButtonUp.png');
-$dialogCloseButtonHover: url('/media/ui/dialogCloseButtonHover.png');
-$dialogCloseButtonDown: url('/media/ui/dialogCloseButtonDown.png');
-$checkbox: url('/media/ui/checkbox.png');
-$checkboxHover: url('/media/ui/checkboxHover.png');
-$checkboxCheck: url('/media/ui/checkboxCheck.png');
-$buttonUp: url('/media/ui/buttonUp.png');
-$buttonHover: url('/media/ui/buttonHover.png');
-$buttonDown: url('/media/ui/buttonDown.png');
-$buttonSmallUp: url('/media/ui/buttonSmallUp.png');
-$buttonSmallHover: url('/media/ui/buttonSmallHover.png');
-$buttonSmallDown: url('/media/ui/buttonSmallDown.png');
-$cursor: url('/media/ui/cursor.png');
-$cursorPointer: url('/media/ui/cursorPointer.png');
-$cursorInteract: url('/media/ui/cursorInteract.png');
-$selectBorder: url('/media/ui/selectBorder.png');
-$selectArrow: url('/media/ui/selectArrow.png');
-$selectArrowClick: url('/media/ui/selectArrowClick.png');
-$radio: url('/media/ui/radio.png');
-$rangeBorder: url('/media/ui/rangeBorder.png');
-$range: url('/media/ui/range.png');
-$rangeBackground: url('/media/ui/rangeBackground.png');
-$helpButton: url('/media/ui/helpButton.png');
-$helpButtonClick: url('/media/ui/helpButtonClick.png');
-$settingsButton: url('/media/ui/settingsButton.png');
-$settingsButtonClick: url('/media/ui/settingsButtonClick.png');
+@use 'sass:string';
+
+$assetVersion: '' !default;
+
+@function asset-url($path) {
+    @if $assetVersion == '' {
+        @return url($path);
+    }
+    @if string.index($path, '/media/') == 1 {
+        @return url('/media/v-#{$assetVersion}/#{string.slice($path, 8)}');
+    }
+    @return url('/fonts/v-#{$assetVersion}/#{string.slice($path, 8)}');
+}
+
+$backgroundTexture: asset-url('/media/ui/backgroundTexture.png');
+$borderRight: asset-url('/media/ui/borderRight.png');
+$borderTop: asset-url('/media/ui/borderTop.png');
+$panelBackground: asset-url('/media/ui/panelBackground.png');
+$border: asset-url('/media/ui/border.png');
+$dialogBorder: asset-url('/media/ui/dialogBorder.png');
+$dialogCloseButtonUp: asset-url('/media/ui/dialogCloseButtonUp.png');
+$dialogCloseButtonHover: asset-url('/media/ui/dialogCloseButtonHover.png');
+$dialogCloseButtonDown: asset-url('/media/ui/dialogCloseButtonDown.png');
+$checkbox: asset-url('/media/ui/checkbox.png');
+$checkboxHover: asset-url('/media/ui/checkboxHover.png');
+$checkboxCheck: asset-url('/media/ui/checkboxCheck.png');
+$buttonUp: asset-url('/media/ui/buttonUp.png');
+$buttonHover: asset-url('/media/ui/buttonHover.png');
+$buttonDown: asset-url('/media/ui/buttonDown.png');
+$buttonSmallUp: asset-url('/media/ui/buttonSmallUp.png');
+$buttonSmallHover: asset-url('/media/ui/buttonSmallHover.png');
+$buttonSmallDown: asset-url('/media/ui/buttonSmallDown.png');
+$cursor: asset-url('/media/ui/cursor.png');
+$cursorPointer: asset-url('/media/ui/cursorPointer.png');
+$cursorInteract: asset-url('/media/ui/cursorInteract.png');
+$selectBorder: asset-url('/media/ui/selectBorder.png');
+$selectArrow: asset-url('/media/ui/selectArrow.png');
+$selectArrowClick: asset-url('/media/ui/selectArrowClick.png');
+$radio: asset-url('/media/ui/radio.png');
+$rangeBorder: asset-url('/media/ui/rangeBorder.png');
+$range: asset-url('/media/ui/range.png');
+$rangeBackground: asset-url('/media/ui/rangeBackground.png');
+$helpButton: asset-url('/media/ui/helpButton.png');
+$helpButtonClick: asset-url('/media/ui/helpButtonClick.png');
+$settingsButton: asset-url('/media/ui/settingsButton.png');
+$settingsButtonClick: asset-url('/media/ui/settingsButtonClick.png');

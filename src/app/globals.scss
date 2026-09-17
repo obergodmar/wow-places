@@ -1,15 +1,18 @@
+@use '../assets/assets' as *;
+
 @font-face {
     font-family: 'Arial Narrow';
+    font-display: swap;
     src:
-        url(/fonts/font-0.woff2) format('woff2'),
-        url(/fonts/font-1.woff) format('woff');
+        asset-url('/fonts/font-0.woff2') format('woff2'),
+        asset-url('/fonts/font-1.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Morpheus';
-    src: url('/fonts/morpheus.ttf') format('truetype');
+    src: asset-url('/fonts/morpheus.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: swap;

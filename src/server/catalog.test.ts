@@ -45,4 +45,21 @@ describe('place repository', () => {
             createPlaceRepository({ mediaBaseUrl: 'http://cdn.example/' }).list(),
         ).rejects.toThrow('HTTPS');
     });
+    it('uses versioned local media but leaves external storage URLs unchanged', async () => {
+        vi.stubEnv('NEXT_PUBLIC_ASSET_VERSION', 'test-version');
+        try {
+            const local = await createPlaceRepository({}).list();
+            expect(local[0].view[0]).toBe(
+                '/media/v-test-version/stormwind-park/view/stormwind-park-1.jpg',
+            );
+            const external = await createPlaceRepository({
+                mediaBaseUrl: 'https://cdn.example/',
+            }).list();
+            expect(external[0].view[0]).toBe(
+                'https://cdn.example/stormwind-park/view/stormwind-park-1.jpg',
+            );
+        } finally {
+            vi.unstubAllEnvs();
+        }
+    });
 });

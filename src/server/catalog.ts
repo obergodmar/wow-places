@@ -2,6 +2,7 @@ import 'server-only';
 import { cache } from 'react';
 import { parsePlaces, type Place } from '../domain/places';
 import bundledPlaces from './places.json';
+import { assetUrl } from '../assets/urls';
 
 /** Read boundary for a future database/CMS repository. No browser credentials or write API. */
 export interface PlaceRepository {
@@ -26,7 +27,14 @@ export function createPlaceRepository(config: {
                 data = await response.json();
             }
             const places = parsePlaces(data);
-            if (!config.mediaBaseUrl) return places;
+            if (!config.mediaBaseUrl) {
+                return places.map((place) => ({
+                    ...place,
+                    preview: place.preview.map(assetUrl),
+                    view: place.view.map(assetUrl),
+                    music: place.music.map(assetUrl),
+                }));
+            }
             const base = new URL(config.mediaBaseUrl);
             if (base.protocol !== 'https:') throw new Error('MEDIA_BASE_URL must use HTTPS');
             const resolve = (url: string) =>

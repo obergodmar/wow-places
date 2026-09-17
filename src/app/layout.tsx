@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { UiAssetPreloads } from './asset-preloads';
 import './globals.scss';
 import '../screens/app/style.scss';
 
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return (
         <html lang="en">
             <body>
+                <UiAssetPreloads />
                 {children}
                 <Analytics />
                 <SpeedInsights />

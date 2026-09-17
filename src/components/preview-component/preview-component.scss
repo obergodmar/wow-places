@@ -16,7 +16,8 @@ $previewNameHeight: 25px;
     background-repeat: no-repeat;
     background-position: center;
     background-size: $previewWidth $previewHeight;
-    border: $previewBorderWidth double $fontColor;
+    // Keep the fallback subdued while the decorative border image loads.
+    border: $previewBorderWidth solid #252522;
     border-image: $border 12 12 11 12;
     border-image-outset: math.div($previewBorderWidth, 2);
     border-image-repeat: stretch stretch;
