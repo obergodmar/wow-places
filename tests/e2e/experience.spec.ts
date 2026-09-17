@@ -19,7 +19,7 @@ test('loads original scene, navigates views and places, and restores browser his
     await page.goForward();
     await expect(page).toHaveURL(/\/stormwind-park\/1$/);
     await page.getByRole('button', { name: 'Places', exact: true }).click();
-    await page.getByRole('button', { name: 'Halls Of Valor', exact: true }).click();
+    await page.getByRole('button', { name: 'Halls of Valor', exact: true }).click();
     await expect(page).toHaveURL(/\/halls-of-valor\/0$/);
     await expect(page.locator('.view')).toHaveCSS('background-image', /halls-of-valor-1.jpg/);
     expect(errors).toEqual([]);
