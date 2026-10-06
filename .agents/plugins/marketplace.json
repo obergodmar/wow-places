@@ -1,0 +1,21 @@
+{
+    "name": "agent-workflows",
+    "interface": {
+        "displayName": "Agent Workflows"
+    },
+    "plugins": [
+        {
+            "name": "agent-workflows",
+            "source": {
+                "source": "url",
+                "url": "https://github.com/obergodmar/agents.git",
+                "sha": "6a18e84284c72cbeffbf9f8ef179daea1d893d15"
+            },
+            "policy": {
+                "installation": "AVAILABLE",
+                "authentication": "ON_USE"
+            },
+            "category": "Productivity"
+        }
+    ]
+}

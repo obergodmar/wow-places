@@ -4,6 +4,19 @@ Explore iconic World of Warcraft locations with immersive scenery, original musi
 
 [Visit the website](https://wow-places.obergodmar.tech)
 
+## Agent workflows
+
+The Agent Workflows Codex plugin is declared in `.agents/plugins/marketplace.json`, pinned to a reviewed Git commit, and enabled in `.codex/config.toml`. Project instructions remain in `AGENTS.md`.
+
+From this trusted project, use Codex's plugin manager:
+
+```sh
+codex plugin marketplace add .
+codex plugin add agent-workflows@agent-workflows
+```
+
+The desktop app can also install it from the Agent Workflows source in the Plugins Directory. Start a new Codex session after installation. Application dependencies, CI, and deployment do not require Codex or the plugin. To update, review a new source commit, change the catalog's `source.sha`, reinstall/refresh through Codex, and commit the catalog change. Keep personal agent state ignored.
+
 ## Controls
 
 - **Esc** — close an open scenery panel or toggle settings.

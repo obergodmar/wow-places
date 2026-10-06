@@ -16,3 +16,12 @@ devenv.local.yaml
 .DS_Store
 
 .pnpm-store/
+
+# Versioned Codex plugin catalog; keep personal agent state private.
+/.agents/*
+!/.agents/plugins/
+/.agents/plugins/*
+!/.agents/plugins/marketplace.json
+
+/.codex/*
+!/.codex/config.toml
